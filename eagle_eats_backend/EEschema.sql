@@ -3,31 +3,32 @@ drop table if exists driver;
 
 pragma foreign_keys = on;
 
-create table user(
+create table account(
     id integer primary key autoincrement,
-    student_id integer unique,
-
-    first_name text not null,
-    last_name text not null,
-
-    user_name text not null unique,
-    hashed_password text not null
+    username text not null unique,
+    hashed_password text not null,
+    first_name text,
+    last_name text,
+    role text not null check(role in ('user', 'driver', 'kitchen'))
+);
+create table user(
+    account_id integer primary key,
+    student_id integer not null unique,
+    foreign key (account_id) references account(id)
 );
 
 create table driver(
-    id integer primary key autoincrement,
-
-    first_name text not null,
-    last_name text not null,
-
-    user_name text not null unique,
-    hashed_password text not null
+    account_id integer primary key,
+    state text not null,
+    license_id text not null,
+    foreign key (account_id) references account(id),
+    unique(state, license_id)
 );
 
 create table kitchen(
-    id integer primary key autoincrement,
-    location text not null check(location in ('mcelroy commons', 'lions dinning hall', 'lover live')),
+    account_id integer primary key,
+    location text not null check(location in ('mcelroy commons', 'lions dinning hall', 'lower live')),
     menu_id integer not null,
-    hashed_password text not null,
+    foreign key (account_id) references account(id),
     foreign key (menu_id) references menu(id)
 );

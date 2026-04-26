@@ -32,15 +32,17 @@ def register_user():
         
         if error is None:
             try:
-                database_ref.execute(
-                    'insert into user(student_id, first_name, last_name, user_name, hashed_password)'
-                    ' values(?, ?, ?, ?, ?)',
-                    (student_id, first_name, last_name, username, generate_password_hash(password))
-                )
-                database_ref.commit()
+                account_id = create_account(database_ref, error, first_name, last_name, username, password, 'user')
+                if account_id is not None:
+                    database_ref.execute(
+                        'insert into user(account_id, student_id)'
+                        ' values(?, ?)',
+                        (account_id, student_id)
+                    )
+                    database_ref.commit()
             except database_ref.IntegrityError:
-                error = f'An account with the ID or username is already registered'
-        
+                if error is None:
+                    error = f'An account with the ID is already registered'
         flash(error)
     return render_template('auth/user_registration.html')
 
@@ -51,6 +53,8 @@ def register_driver():
         last_name = request.form['lastname']
         username = request.form['username']
         password = request.form['password']
+        state = request.form['state']
+        license_id = request.form['license']
         database_ref = get_db()
         error = None
 
@@ -62,17 +66,62 @@ def register_driver():
             error = 'A username is required'
         elif password is None:
             error = 'A password is required'
-        
+
         if error == None:
             try:
-                database_ref.execute(
-                    'insert into driver(first_name, last_name, user_name, hashed_password)'
-                    ' values(?, ?, ?, ?)',
-                    (first_name, last_name, username, generate_password_hash(password))
-                )
-                database_ref.commit()
+                account_id = create_account(database_ref, error, first_name, last_name, username, password, 'driver')
+                if account_id is not None:
+                    database_ref.execute(
+                        'insert into driver(account_id, state, license_id)'
+                        ' values(?, ?, ?)',
+                        (account_id, state, license_id)
+                    )
+                    database_ref.commit()
             except database_ref.IntegrityError:
-                error = f'An account with this username is already registered'
+                if error is None:
+                    error = f'An account with this license in {state} is already registered'
             
         flash(error)
     return render_template('auth/driver_registration.html')
+
+def create_account(db, error, first_name, last_name, username, password, role):
+    try:
+        execution = db.execute(
+            'insert into account(username, hashed_password, first_name, last_name, role)'
+            ' values(?, ?, ?, ?, ?)',
+            (username, generate_password_hash(password), first_name, last_name, role)
+        )
+        return execution.lastrowid #return id
+    except db.IntegrityError:
+        error = f'User {username} is already registered'
+        flash(error)
+        return None
+
+@blue_print.route('/login', methods=('GET', 'POST'))
+def login(account_type):
+
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        database_ref = get_db()
+        error = None
+
+        account = database_ref.execute(
+            f'select * from {account_type} where user_name = ?',
+            (username)
+        ).fetchone()
+
+        if username is None:
+            error = 'Incorrect username'
+        elif not check_password_hash(account['hashed_password'], password):
+            error = 'Incorrect password'
+        
+        if error is None:
+            session.clear()
+            session['account_id'] = account['id']
+            if account_type == 'user':
+                return redirect(url_for(''))
+            return redirect(url_for(''))
+        
+        flash(error)
+    return render_template('auth/login.html')
