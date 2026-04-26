@@ -3,10 +3,19 @@
 
     </header>
     <body>
+        <nav>
+            <h1>Eagle Eats</h1>
+            <ul>
+                <li><a href="{{url_for('auth.register_user')}}">Register</a>
+            </ul>
+        </nav>
         <section class="content">
             <header>
                 {%block header%}{%endblock%}
             </header>
+            {% for message in get_flashed_messages() %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
             {%block content%}{%endblock%}
         </section>
     </body>

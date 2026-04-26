@@ -4,12 +4,13 @@ drop table if exists driver;
 pragma foreign_keys = on;
 
 create table user(
-    student_id integer primary key,
+    id integer primary key autoincrement,
+    student_id integer unique,
 
     first_name text not null,
     last_name text not null,
 
-    user_name text not null,
+    user_name text not null unique,
     hashed_password text not null
 );
 

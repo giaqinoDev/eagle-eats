@@ -18,10 +18,13 @@ def create_app(test_config=None):
 
     @app.route('/home')
     def hello():
-        return render_template("index.html")
+        return render_template('index.html')
     
     from . import data_base
     data_base.init_app(app)
+
+    from . import auth
+    app.register_blueprint(auth.blue_print)
 
     return app
 
