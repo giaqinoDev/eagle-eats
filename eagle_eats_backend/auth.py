@@ -98,8 +98,7 @@ def create_account(db, error, first_name, last_name, username, password, role):
         return None
 
 @blue_print.route('/login', methods=('GET', 'POST'))
-def login(account_type):
-
+def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -107,8 +106,8 @@ def login(account_type):
         error = None
 
         account = database_ref.execute(
-            f'select * from {account_type} where user_name = ?',
-            (username)
+            f'select * from account where username = ?',
+            (username,)
         ).fetchone()
 
         if username is None:
@@ -119,9 +118,29 @@ def login(account_type):
         if error is None:
             session.clear()
             session['account_id'] = account['id']
-            if account_type == 'user':
-                return redirect(url_for(''))
+            session['role'] = account['role']
+            if account['role'] == 'user':
+                return redirect(url_for('user.dashboard', id=session['account_id']))
             return redirect(url_for(''))
         
         flash(error)
     return render_template('auth/login.html')
+
+@blue_print.before_app_request
+def load_logged_in_user():
+    account_id = session.get('account_id')
+    role = session.get('role')
+    if account_id is None:
+        g.user = None
+    else:
+        g.user = get_db().execute(
+            f'select * from account join {role} on account.id = {role}.account_id'
+        ).fetchone()
+
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+        return view(**kwargs)
+    return wrapped_view
