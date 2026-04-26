@@ -20,7 +20,7 @@ create table driver(
     first_name text not null,
     last_name text not null,
 
-    user_name text not null,
+    user_name text not null unique,
     hashed_password text not null
 );
 

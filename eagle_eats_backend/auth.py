@@ -42,4 +42,37 @@ def register_user():
                 error = f'An account with the ID or username is already registered'
         
         flash(error)
-    return render_template('auth/register.html')
+    return render_template('auth/user_registration.html')
+
+@blue_print.route('/register/driver', methods=('GET', 'POST'))
+def register_driver():
+    if request.method == 'POST':
+        first_name = request.form['firstname']
+        last_name = request.form['lastname']
+        username = request.form['username']
+        password = request.form['password']
+        database_ref = get_db()
+        error = None
+
+        if first_name is None:
+            error = 'Your first name is required'
+        elif last_name is None:
+            error = 'Your last name is required'
+        elif username is None:
+            error = 'A username is required'
+        elif password is None:
+            error = 'A password is required'
+        
+        if error == None:
+            try:
+                database_ref.execute(
+                    'insert into driver(first_name, last_name, user_name, hashed_password)'
+                    ' values(?, ?, ?, ?)',
+                    (first_name, last_name, username, generate_password_hash(password))
+                )
+                database_ref.commit()
+            except database_ref.IntegrityError:
+                error = f'An account with this username is already registered'
+            
+        flash(error)
+    return render_template('auth/driver_registration.html')
