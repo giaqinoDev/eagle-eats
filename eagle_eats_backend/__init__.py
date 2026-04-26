@@ -20,5 +20,8 @@ def create_app(test_config=None):
     def hello():
         return render_template("index.html")
     
+    from . import data_base
+    data_base.init_app(app)
+
     return app
 
