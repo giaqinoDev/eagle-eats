@@ -120,7 +120,7 @@ def login():
             session['account_id'] = account['id']
             session['role'] = account['role']
             if account['role'] == 'user':
-                return redirect(url_for('user.dashboard', id=session['account_id']))
+                return redirect(url_for('user.dashboard', user_id=session['account_id']))
             return redirect(url_for(''))
         
         flash(error)

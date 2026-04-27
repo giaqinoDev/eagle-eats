@@ -5,6 +5,6 @@ from flask import(
 from eagle_eats_backend.data_base import get_db
 
 blue_print = Blueprint('user', __name__, url_prefix='/user')
-@blue_print.route('/<int:id>/dashboard', methods=('GET', 'POST'))
-def dashboard():
+@blue_print.route('/<int:user_id>/dashboard', methods=('GET', 'POST'))
+def dashboard(user_id):
     return None
