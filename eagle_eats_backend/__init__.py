@@ -15,10 +15,6 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
     
     os.makedirs(app.instance_path, exist_ok = True)
-
-    @app.route('/home')
-    def hello():
-        return render_template('index.html')
     
     from . import data_base
     data_base.init_app(app)
@@ -31,6 +27,7 @@ def create_app(test_config=None):
 
     from . import driver
     app.register_blueprint(driver.blue_print)
+
 
     return app
 

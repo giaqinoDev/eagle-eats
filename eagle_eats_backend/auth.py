@@ -120,7 +120,7 @@ def login():
             (username,)
         ).fetchone()
 
-        if username is None or account is None:
+        if not username or account is None:
             error = 'Incorrect username'
         elif not check_password_hash(account['hashed_password'], password):
             error = 'Incorrect password'
@@ -131,10 +131,15 @@ def login():
             session['role'] = account['role']
             if account['role'] == 'user':
                 return redirect(url_for('user.dashboard', user_id=session['account_id']))
-            return redirect(url_for('driver.dashboard', user_id = session['account_id']))
-        
+            elif account['role'] == 'driver':
+                return redirect(url_for('driver.dashboard', user_id = session['account_id']))
+            elif account['role'] == 'kitchen':
+                return redirect(url_for('kitchen.dashboard', user_id = session['account_id']))
+            elif account['role'] == 'admin':
+                return redirect(url_for('admin.dashboard'))
         flash(error)
     return render_template('auth/login.html')
+
 @blue_print.route('/logout', methods = ('POST', ))
 def logout():
     if request.method == 'POST':

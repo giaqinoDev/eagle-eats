@@ -9,7 +9,7 @@ create table account(
     hashed_password text not null,
     first_name text,
     last_name text,
-    role text not null check(role in ('user', 'driver', 'kitchen'))
+    role text not null check(role in ('user', 'driver', 'kitchen', 'admin'))
 );
 create table user(
     account_id integer primary key,

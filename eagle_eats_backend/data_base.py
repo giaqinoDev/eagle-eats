@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import datetime
-
+from .admin.create_admin import ensure_admin
 import click
 from flask import current_app, g
 
@@ -23,9 +23,9 @@ def close_db(e = None):
 #Functions that will run sql commands
 def init_db():
     data_base = get_db()
-
     with current_app.open_resource('EEschema.sql') as schema:
         data_base.executescript(schema.read().decode('utf8'))
+    ensure_admin(data_base)
 
 @click.command('init_db')
 def init_db_command():
