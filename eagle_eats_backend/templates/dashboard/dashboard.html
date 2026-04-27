@@ -1,5 +1,8 @@
 <html>
     <body>
-        <h1>Usr dashboard</h1>
+        <h1>{{user_id}} dashboard</h1>
+        <form action="{{url_for('auth.logout')}}" method="post">
+            <button type="submit">Logout</button>
+        </form>
     </body>
 </html>

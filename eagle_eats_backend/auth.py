@@ -109,7 +109,7 @@ def login():
             f'select * from account where username = ?',
             (username,)
         ).fetchone()
-        
+
         if username is None or account is None:
             error = 'Incorrect username'
         elif not check_password_hash(account['hashed_password'], password):
@@ -125,7 +125,11 @@ def login():
         
         flash(error)
     return render_template('auth/login.html')
-
+@blue_print.route('/logout', methods = ('POST', ))
+def logout():
+    if request.method == 'POST':
+        session.clear()
+        return redirect(url_for('auth.login'))
 #Tells flask to run this function before every request throughout the entire app
 @blue_print.before_app_request
 def load_logged_in_user():

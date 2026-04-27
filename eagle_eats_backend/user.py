@@ -9,4 +9,4 @@ blue_print = Blueprint('user', __name__, url_prefix='/user')
 @blue_print.route('/<int:user_id>/dashboard', methods=('GET', 'POST'))
 @login_required
 def dashboard(user_id):
-    return render_template('dashboard/dashboard.html')
+    return render_template('dashboard/dashboard.html', user_id = 'User')
