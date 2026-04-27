@@ -8,6 +8,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from eagle_eats_backend.data_base import get_db
 
 blue_print = Blueprint('auth', __name__, url_prefix = '/auth')
+
+
+#-------------------------------------------------------------Registration--------------------------------------------------------------
 @blue_print.route('/register/user', methods=('GET', 'POST'))
 def register_user():
     if(request.method == 'POST'):
@@ -106,7 +109,7 @@ def create_account(db, error, first_name, last_name, username, password, role):
         error = f'User {username} is already registered'
         flash(error)
         return None
-
+#---------------------------------------------------------Login/Logout---------------------------------------------------------------------------
 @blue_print.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
