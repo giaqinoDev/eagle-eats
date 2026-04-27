@@ -40,6 +40,11 @@ def register_user():
                         (account_id, student_id)
                     )
                     database_ref.commit()
+                    #Save new registrated user to session, also just in case clear session
+                    session.clear()
+                    session['account_id'] = account_id
+                    session['role'] = 'user'
+                    return redirect(url_for('user.dashboard', user_id=session['account_id']))
             except database_ref.IntegrityError:
                 if error is None:
                     error = f'An account with the ID is already registered'
@@ -77,6 +82,11 @@ def register_driver():
                         (account_id, state, license_id)
                     )
                     database_ref.commit()
+                    #Save new registrated user to session, also just in case clear session
+                    session.clear()
+                    session['account_id'] = account_id
+                    session['role'] = 'user'
+                    return redirect(url_for('driver.dashboard', user_id=session['account_id']))
             except database_ref.IntegrityError:
                 if error is None:
                     error = f'An account with this license in {state} is already registered'
