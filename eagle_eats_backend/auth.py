@@ -109,8 +109,8 @@ def login():
             f'select * from account where username = ?',
             (username,)
         ).fetchone()
-
-        if username is None:
+        
+        if username is None or account is None:
             error = 'Incorrect username'
         elif not check_password_hash(account['hashed_password'], password):
             error = 'Incorrect password'
@@ -121,11 +121,12 @@ def login():
             session['role'] = account['role']
             if account['role'] == 'user':
                 return redirect(url_for('user.dashboard', user_id=session['account_id']))
-            return redirect(url_for(''))
+            return redirect(url_for('driver.dashboard', user_id = session['account_id']))
         
         flash(error)
     return render_template('auth/login.html')
 
+#Tells flask to run this function before every request throughout the entire app
 @blue_print.before_app_request
 def load_logged_in_user():
     account_id = session.get('account_id')
@@ -140,7 +141,7 @@ def load_logged_in_user():
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
-        if g.user is None:
+        if g.user is None or kwargs['user_id'] != session['account_id']:
             return redirect(url_for('auth.login'))
         return view(**kwargs)
     return wrapped_view
