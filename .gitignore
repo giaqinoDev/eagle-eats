@@ -3,4 +3,4 @@ __pycache__/
 *.pyc
 instance/
 *.sqlite
-admin/
+admin_init/

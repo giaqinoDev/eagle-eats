@@ -153,14 +153,27 @@ def load_logged_in_user():
     if account_id is None:
         g.user = None
     else:
-        g.user = get_db().execute(
-            f'select * from account join {role} on account.id = {role}.account_id'
-        ).fetchone()
+        if role == 'admin':
+            g.user = get_db().execute(
+                'select * from account where role = "admin"'
+            ).fetchone()
+        else:
+            g.user = get_db().execute(
+                f'select * from account join {role} on account.id = {role}.account_id'
+            ).fetchone()
 
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None or kwargs['user_id'] != session['account_id']:
+            return redirect(url_for('auth.login'))
+        return view(**kwargs)
+    return wrapped_view
+
+def admin_login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None or session['role'] != 'admin':
             return redirect(url_for('auth.login'))
         return view(**kwargs)
     return wrapped_view

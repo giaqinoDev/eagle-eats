@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import datetime
-from .admin.create_admin import ensure_admin
+from .admin_init.create_admin import ensure_admin
 import click
 from flask import current_app, g
 

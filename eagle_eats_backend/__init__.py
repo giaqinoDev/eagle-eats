@@ -28,6 +28,9 @@ def create_app(test_config=None):
     from . import driver
     app.register_blueprint(driver.blue_print)
 
+    from . import admin
+    app.register_blueprint(admin.blue_print)
+
 
     return app
 
