@@ -13,6 +13,8 @@ blue_print = Blueprint('auth', __name__, url_prefix = '/auth')
 #-------------------------------------------------------------Registration--------------------------------------------------------------
 @blue_print.route('/register/user', methods=('GET', 'POST'))
 def register_user():
+    if session.get("account_id"):
+        return get_dashboard()
     if(request.method == 'POST'):
         student_id = request.form['student_id']
         first_name = request.form['firstname']
@@ -47,7 +49,7 @@ def register_user():
                     session.clear()
                     session['account_id'] = account_id
                     session['role'] = 'user'
-                    return redirect(url_for('user.dashboard', user_id=session['account_id']))
+                    return redirect(url_for('user.dashboard'))
             except database_ref.IntegrityError:
                 if error is None:
                     error = f'An account with the ID is already registered'
@@ -56,6 +58,8 @@ def register_user():
 
 @blue_print.route('/register/driver', methods=('GET', 'POST'))
 def register_driver():
+    if session.get('account_id'):
+        return get_dashboard()
     if request.method == 'POST':
         first_name = request.form['firstname']
         last_name = request.form['lastname']
@@ -89,7 +93,7 @@ def register_driver():
                     session.clear()
                     session['account_id'] = account_id
                     session['role'] = 'user'
-                    return redirect(url_for('driver.dashboard', user_id=session['account_id']))
+                    return redirect(url_for('driver.dashboard'))
             except database_ref.IntegrityError:
                 if error is None:
                     error = f'An account with this license in {state} is already registered'
@@ -112,6 +116,9 @@ def create_account(db, error, first_name, last_name, username, password, role):
 #---------------------------------------------------------Login/Logout---------------------------------------------------------------------------
 @blue_print.route('/login', methods=('GET', 'POST'))
 def login():
+    if session.get('account_id'):
+        return get_dashboard()
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -132,51 +139,56 @@ def login():
             session.clear()
             session['account_id'] = account['id']
             session['role'] = account['role']
-            if account['role'] == 'user':
-                return redirect(url_for('user.dashboard', user_id=session['account_id']))
-            elif account['role'] == 'driver':
-                return redirect(url_for('driver.dashboard', user_id = session['account_id']))
-            elif account['role'] == 'kitchen':
-                return redirect(url_for('kitchen.dashboard', user_id = session['account_id']))
-            elif account['role'] == 'admin':
-                return redirect(url_for('admin.dashboard'))
+            return get_dashboard()
+
         flash(error)
+    
     return render_template('auth/login.html')
+
+def get_dashboard():
+    id = session.get('account_id')
+    role = session.get('role')
+    if role == 'user':
+        return redirect(url_for('user.dashboard'))
+    elif role == 'driver':
+        return redirect(url_for('driver.dashboard'))
+    elif role == 'kitchen':
+        return redirect(url_for('kitchen.dashboard'))
+    elif role == 'admin':
+        return redirect(url_for('admin.dashboard'))
 
 @blue_print.route('/logout', methods = ('POST', ))
 def logout():
     if request.method == 'POST':
         session.clear()
         return redirect(url_for('auth.login'))
+    
 #Tells flask to run this function before every request throughout the entire app
 @blue_print.before_app_request
 def load_logged_in_user():
-    account_id = session.get('account_id')
+    id = session.get('account_id')
     role = session.get('role')
-    if account_id is None:
+    if id is None:
         g.user = None
     else:
         if role == 'admin':
             g.user = get_db().execute(
                 'select * from account where role = "admin"'
             ).fetchone()
+            redirect(url_for('admin.dashboard'))
         else:
             g.user = get_db().execute(
                 f'select * from account join {role} on account.id = {role}.account_id'
             ).fetchone()
+            redirect(url_for(f'{role}.dashboard'))
 
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
-        if g.user is None or kwargs['user_id'] != session['account_id']:
+        role = session.get('role')
+        if g.user is None:
             return redirect(url_for('auth.login'))
-        return view(**kwargs)
-    return wrapped_view
-
-def admin_login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None or session['role'] != 'admin':
-            return redirect(url_for('auth.login'))
+        elif role != request.endpoint.split(".")[0]:
+            return redirect(url_for(f'{role}.dashboard'))
         return view(**kwargs)
     return wrapped_view
