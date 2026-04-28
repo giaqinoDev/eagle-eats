@@ -1,6 +1,7 @@
 import sqlite3
 from datetime import datetime
 from .admin_init.create_admin import ensure_admin
+from .admin_init.create_admin import ensure_base_kitchens
 import click
 from flask import current_app, g
 
@@ -26,6 +27,7 @@ def init_db():
     with current_app.open_resource('EEschema.sql') as schema:
         data_base.executescript(schema.read().decode('utf8'))
     ensure_admin(data_base)
+    ensure_base_kitchens(data_base)
 
 @click.command('init_db')
 def init_db_command():

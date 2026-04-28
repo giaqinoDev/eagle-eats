@@ -5,5 +5,12 @@
         <form action="{{url_for('auth.logout')}}" method="post">
             <button type="submit">Logout</button>
         </form>
+        <section>
+            <h2>Kitchens</h2>
+            {%for kitchen in kitchens%}
+                <div>
+                    <p>{{kitchen['username']}}</p>
+                </div>
+        </section>
     </body>
 </html>
