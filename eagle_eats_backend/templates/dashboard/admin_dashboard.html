@@ -8,9 +8,11 @@
         <section>
             <h2>Kitchens</h2>
             {%for kitchen in kitchens%}
-                <div>
+                <div style="background-color: red">
+                    {{lucide("chef-hat")}}
                     <p>{{kitchen['username']}}</p>
                 </div>
+            {%endfor%}
         </section>
     </body>
 </html>
