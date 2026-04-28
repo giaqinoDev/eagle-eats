@@ -14,14 +14,14 @@ create table account(
 create table user(
     account_id integer primary key,
     student_id integer not null unique,
-    foreign key (account_id) references account(id)
+    foreign key (account_id) references account(id) on delete cascade
 );
 
 create table driver(
     account_id integer primary key,
     state text not null,
     license_id text not null,
-    foreign key (account_id) references account(id),
+    foreign key (account_id) references account(id) on delete cascade,
     unique(state, license_id)
 );
 
@@ -39,10 +39,9 @@ create table kitchen(
     ) unique,
     description text,
     isOperating boolean,
-    menu_id integer,
-    foreign key (account_id) references account(id)
-    --foreign key (menu_id) references menu(id)
-    --implement later ^
+    menu_id integer default null,
+    foreign key (account_id) references account(id) on delete cascade,
+    foreign key (menu_id) references menu(id) on delete set null
 );
 
 create table kitchen_weekly_schedule(
@@ -60,4 +59,22 @@ create table kitchen_weekly_schedule(
 
     foreign key (kitchen_id) references kitchen(id),
     unique(kitchen_id, day_of_week)
+);
+
+create table menu(
+    id integer primary key autoincrement,
+    name text not null
+);
+create table item(
+    id integer,
+    image_path text,
+    name text not null,
+    price decimal(5,2) not null
+);
+create table menu_item(
+    menu_id integer,
+    item_id integer,
+    primary key (menu_id, item_id),
+    foreign key (menu_id) references menu(id) on delete cascade,
+    foreign key (item_id) references item(id) on delete cascade
 );
