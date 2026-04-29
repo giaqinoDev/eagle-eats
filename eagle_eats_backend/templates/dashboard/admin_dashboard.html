@@ -1,16 +1,25 @@
 <html>
     <body>
         <h1>Admin Dashboard</h1>
-        <p>{{g.user["username"]}}</p>
+        <div style="display: flex; align-items: center; background-color: #f63e31; padding: 5px; width: fit-content; border-radius: 15px;">
+            {{lucide("user-round", size=20)}}
+            <p style="margin-left: 5px;">{{g.user["username"]}}</p>
+        </div>
+
         <form action="{{url_for('auth.logout')}}" method="post">
             <button type="submit">Logout</button>
         </form>
         <section>
             <h2>Kitchens</h2>
             {%for kitchen in kitchens%}
-                <div style="background-color: red">
-                    {{lucide("chef-hat")}}
-                    <p>{{kitchen['username']}}</p>
+                <div style="padding: 10px; border: 1px solid; border-radius: 5px; margin: 5px;">
+                    <details>
+                        <summary style="display:flex; align-items:center; gap:8px; cursor:pointer; display: list-item;">
+                                {{ kitchen['username'] }}
+                                {{lucide("chef-hat", size=20)}}
+                        </summary>
+                        <p>Content</p>
+                    </details>
                 </div>
             {%endfor%}
         </section>
