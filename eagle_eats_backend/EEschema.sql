@@ -39,15 +39,22 @@ create table kitchen(
     ) unique,
     description text,
     isOperating boolean,
+    schedule_id integer default null,
     menu_id integer default null,
     foreign key (account_id) references account(id) on delete cascade,
+    foreign key (schedule_id) references schedule(id) on delete set null,
     foreign key (menu_id) references menu(id) on delete set null
 );
 
-create table kitchen_weekly_schedule(
+create table schedule(
     id integer primary key autoincrement,
-    kitchen_id integer not null,
+    name text not null
+);
+
+create table kitchen_weekly_schedule(
+    schedule_id integer not null,
     day_of_week integer check(day_of_week between 1 and 7), --Sunday:1, Saturday:7
+
     isClosed boolean, --admin toggle for full day closure
 
     breakfast_open text,
@@ -57,8 +64,8 @@ create table kitchen_weekly_schedule(
     dinner_open text,
     dinner_closed text,
 
-    foreign key (kitchen_id) references kitchen(id),
-    unique(kitchen_id, day_of_week)
+    foreign key (schedule_id) references schedule(id) on delete cascade,
+    primary key(schedule_id, day_of_week)
 );
 
 create table menu(
