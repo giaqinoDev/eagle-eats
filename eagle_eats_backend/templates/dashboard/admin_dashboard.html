@@ -1,7 +1,7 @@
 <html>
     <body>
         <h1>Admin Dashboard</h1>
-        <div style="display: flex; align-items: center; background-color: #f63e31; padding: 5px; width: fit-content; border-radius: 15px;">
+        <div style="display: flex; align-items: center; background-color: #d6d6d6; padding: 5px; width: fit-content; border-radius: 15px;">
             {{lucide("user-round", size=20)}}
             <p style="margin-left: 5px;">{{g.user["username"]}}</p>
         </div>
@@ -10,13 +10,16 @@
             <button type="submit">Logout</button>
         </form>
         <section>
-            <h2>Kitchens</h2>
+            <h2>Kitchens {{lucide("chef-hat", size=20)}}</h2>
             {%for kitchen in kitchens%}
                 <div style="padding: 10px; border: 1px solid; border-radius: 5px; margin: 5px;">
                     <details>
-                        <summary style="display:flex; align-items:center; gap:8px; cursor:pointer; display: list-item;">
-                                {{ kitchen['username'] }}
-                                {{lucide("chef-hat", size=20)}}
+                        <summary style="display:flex; align-items:center; gap:8px; cursor:pointer; display: row;">
+                                <div style="display: flex; align-items: center;">
+                                    {{lucide('chevron-right', size=20)}}
+                                    {{ kitchen['username'] }}
+                                    {{lucide('dot', size=30, style="color: red;")}}
+                                </div>
                         </summary>
                         <p>Content</p>
                     </details>
