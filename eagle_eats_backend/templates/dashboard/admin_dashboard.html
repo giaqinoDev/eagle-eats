@@ -17,10 +17,16 @@
                         <summary style="display:flex; align-items:center; gap:8px; cursor:pointer; display: row;">
                                 <div style="display: flex; align-items: center;">
                                     {{lucide('chevron-right', size=20)}}
-                                    {{ kitchen['username'] }}
+                                    {{ kitchen.kitchen['username']}}
+                                    {{ kitchen.kitchen['schedule_id']}}
                                     {{lucide('dot', size=30, style="color: red;")}}
                                 </div>
                         </summary>
+                        {%if kitchen.schedule %}
+                            <p>{{ kitchen.schedule.name}}</p>
+                        {%else%}
+                            <p>No schedule available</p>
+                        {%endif%}
                         <p>Content</p>
                     </details>
                 </div>

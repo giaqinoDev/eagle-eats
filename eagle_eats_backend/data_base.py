@@ -27,8 +27,8 @@ def init_db():
     with current_app.open_resource('EEschema.sql') as schema:
         data_base.executescript(schema.read().decode('utf8'))
     ensure_admin(data_base)
-    ensure_base_kitchens(data_base)
     ensure_base_schedules(data_base)
+    ensure_base_kitchens(data_base)
 
 @click.command('init_db')
 def init_db_command():
