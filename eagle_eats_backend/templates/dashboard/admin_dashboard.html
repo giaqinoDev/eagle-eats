@@ -2,6 +2,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="{{url_for('static', filename = 'admin_dashboard.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename = 'schedule_static.css')}}">
     </head>
     <body class="dashboard-page-body">
         <div class="dashboard">
@@ -25,15 +26,18 @@
                                         {{lucide('chevron-right', size=20)}}
                                         {{ kitchen.info.username}}
                                         {%if kitchen.info.isOperating == 0%}
-                                            {{lucide('dot', size=30, style="color: red;")}}
+                                            {{lucide('dot', size=40, style="color: red;")}}
                                         {%else%}
-                                            {{lucide('dot', size=30, style="color: green;")}}
+                                            {{lucide('dot', size=40, style="color: green;")}}
                                         {%endif%}
                                     </div>
                             </summary>
                             <div class="dropdown-content">
                                 {%if kitchen.schedule %}
-                                    <p>{{lucide('calendar-fold')}} {{ kitchen.schedule.name}}</p>
+                                    <p style="display: flex; align-items: center;">{{lucide('calendar-fold', size=20, style="margin-right: 5px;")}} {{kitchen.schedule.name}}</p>
+                                    <div style="overflow-x: scroll;">
+                                        {%include "schedule_grid/schedule_static.html"%}
+                                    </div>
                                 {%else%}
                                     <p>No schedule available</p>
                                 {%endif%}

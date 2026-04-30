@@ -1,0 +1,32 @@
+.schedule-grid {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+}
+
+.schedule-grid th,
+.schedule-grid td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    min-width: 120px;
+    vertical-align: top;
+}
+
+.schedule-grid th {
+    background: #f4f4f4;
+}
+
+.slot {
+    background: white;
+    height: 70px;
+}
+
+.meal-header{
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+.meal-icon{
+    margin-right: 5px;
+}

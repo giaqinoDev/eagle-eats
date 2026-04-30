@@ -1,0 +1,63 @@
+<table class="schedule-grid">
+    <thead>
+        <tr>
+            <th>Meal / Day</th>
+            <th>
+                Sunday<br>
+                <input type="checkbox" name="sunday_active">
+            </th>
+            <th>
+                Monday<br>
+                <input type="checkbox" name="monday_active">
+            </th>
+            <th>
+                Tuesday<br>
+                <input type="checkbox" name="tuesday_active">
+            </th>
+            <th>
+                Wednesday<br>
+                <input type="checkbox" name="wednesday_active">
+            </th>
+            <th>
+                Thursday<br>
+                <input type="checkbox" name="thursday_active">
+            </th>
+            <th>
+                Friday<br>
+                <input type="checkbox" name="friday_active">
+            </th>
+            <th>
+                Saturday<br>
+                <input type="checkbox" name="saturday_active">
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <th><p class="meal-header">{{lucide("egg-fried", size=20, class="meal-icon")}} Breakfast</p></th>
+            {% set meal = "breakfast" %}
+            {% set meal_open = "breakfast_open" %}
+            {% set meal_closed = "breakfast_closed" %}
+            {% include "schedule_grid/weekday_data_cell.html" %}
+            
+        </tr>
+
+        <tr>
+            <th><p class="meal-header">{{lucide("sandwich", size=20, class="meal-icon")}} Lunch</p></th>
+            {% set meal = "lunch" %}
+            {% set meal_open = "lunch_open" %}
+            {% set meal_closed = "lunch_closed" %}
+            {% include "schedule_grid/weekday_data_cell.html" %}
+        </tr>
+
+        <tr>
+            <th> <p class="meal-header">{{lucide("utensils", size=20, class="meal-icon")}}Dinner </p></th>
+            {% set meal = "dinner" %}
+            {% set meal_open = "dinner_open" %}
+            {% set meal_closed = "dinner_closed" %}
+            {% include "schedule_grid/weekday_data_cell.html" %}
+        </tr>
+
+    </tbody>
+</table>
