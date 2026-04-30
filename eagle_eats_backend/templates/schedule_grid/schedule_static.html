@@ -1,34 +1,62 @@
+{%set closed_sunday = kitchen.schedule.week['1'].isClosed%}
+{%set closed_monday = kitchen.schedule.week['2'].isClosed%}
+{%set closed_tuesday = kitchen.schedule.week['3'].isClosed%}
+{%set closed_wednesday = kitchen.schedule.week['4'].isClosed%}
+{%set closed_thursday = kitchen.schedule.week['5'].isClosed%}
+{%set closed_friday = kitchen.schedule.week['6'].isClosed%}
+{%set closed_saturday = kitchen.schedule.week['7'].isClosed%}
 <table class="schedule-grid">
     <thead>
         <tr>
             <th>Meal / Day</th>
             <th>
                 Sunday<br>
-                <input type="checkbox" name="sunday_active">
+                <div class="closed-label">
+                    <label for="sunday_closed">Closed</label>
+                    <input type="checkbox" name="sunday_closed" {%if closed_sunday%}checked{%endif%} disabled>
+                </div>
             </th>
             <th>
                 Monday<br>
-                <input type="checkbox" name="monday_active">
+                <div class="closed-label">
+                    <label for="monday_closed">Closed</label>
+                    <input type="checkbox" name="monday_closed" {%if closed_monday%}checked{%endif%} disabled>
+                </div>
             </th>
             <th>
                 Tuesday<br>
-                <input type="checkbox" name="tuesday_active">
+                <div class="closed-label">
+                    <label for="tuesday_closed">Closed</label>
+                    <input type="checkbox" name="tuesday_closed" {%if closed_tuesday%}checked{%endif%} disabled>
+                </div>
             </th>
             <th>
                 Wednesday<br>
-                <input type="checkbox" name="wednesday_active">
+                <div class="closed-label">
+                    <label for="wednesday_closed">Closed</label>
+                    <input type="checkbox" name="wednesday_closed" {%if closed_wednesday%}checked{%endif%} disabled>
+                </div>
             </th>
             <th>
                 Thursday<br>
-                <input type="checkbox" name="thursday_active">
+                <div class="closed-label">
+                    <label for="thursday_closed">Closed</label>
+                    <input type="checkbox" name="thursday_closed" {%if closed_thursday%}checked{%endif%} disabled>
+                </div>
             </th>
             <th>
                 Friday<br>
-                <input type="checkbox" name="friday_active">
+                <div class="closed-label">
+                    <label for="friday_closed">Closed</label>
+                    <input type="checkbox" name="friday_closed" {%if closed_friday%}checked{%endif%} disabled>
+                </div>
             </th>
             <th>
                 Saturday<br>
-                <input type="checkbox" name="saturday_active">
+                <div class="closed-label">
+                    <label for="saturday_closed">Closed</label>
+                    <input type="checkbox" name="saturday_closed" {%if closed_saturday%}checked{%endif%} disabled>
+                </div>
             </th>
         </tr>
     </thead>

@@ -1,6 +1,10 @@
 .schedule-grid {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
     font-family: Arial, sans-serif;
 }
 
@@ -29,4 +33,11 @@
 }
 .meal-icon{
     margin-right: 5px;
+}
+.closed-label{
+    font-size: 10px;
+    color:#333333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
