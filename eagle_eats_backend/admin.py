@@ -7,8 +7,8 @@ from eagle_eats_backend.auth import login_required
 
 blue_print = Blueprint('admin', __name__, url_prefix="/admin")
 class kitchen_info:
-    def __init__(self, kitchen, schedule, menu):
-        self.kitchen = kitchen
+    def __init__(self, info, schedule, menu):
+        self.info = info
         self.schedule =schedule
         self.menu = menu
 
@@ -20,10 +20,10 @@ def dashboard():
         kitchens = database_ref.execute(
             'select * from account, kitchen where account.id = kitchen.account_id'
         ).fetchall()
-        kitchen_list = []
+        kitchen_info_list = []
         for kitchen in kitchens:
-            kitchen_list.append(kitchen_info(kitchen, get_schedule(kitchen), None))
-    return render_template('dashboard/admin_dashboard.html', kitchens=kitchen_list)
+            kitchen_info_list.append(kitchen_info(kitchen, get_schedule(kitchen), None))
+    return render_template('dashboard/admin_dashboard.html', kitchens=kitchen_info_list)
 
 def get_schedule(kitchen):
     database_ref = get_db()

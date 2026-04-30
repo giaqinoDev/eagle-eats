@@ -1,0 +1,61 @@
+
+.dashboard-page-body{
+    margin: 0;
+    min-height: 100dvh;
+    width: 100%;
+}
+.dashboard{
+    display: flex;
+    flex-direction: row;
+    height: 100dvh;
+}
+.kitchen-info-section{
+    background-color: #98002E;
+    padding: 20px;
+    width: 100%;
+}
+.kitchen-info-dropdown{
+    padding: 10px;
+    margin: 10px 0px;
+    border: 1px none;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); 
+
+    @media (prefers-reduced-motion: no-preference) {
+        interpolate-size: allow-keywords;
+    }
+
+    &::details-content {
+        opacity: 0;
+        block-size: 0;
+        overflow-y: clip;
+        transition: content-visibility 0.25s allow-discrete, opacity 0.25s, block-size 0.25s;
+    }
+
+    &[open]::details-content {
+        opacity: 1;
+        block-size: auto;
+    }
+}
+.info-dropdown-summary svg {
+    transition: transform 0.3s ease;
+}
+
+.kitchen-info-dropdown[open] .info-dropdown-summary svg {
+    transform: rotate(90deg);
+}
+.info-dropdown-summary{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+.summary-header{
+    display: flex; 
+    align-items: center;
+}
+
+.dashboard-nav{
+    width: 20%;
+}
