@@ -22,7 +22,7 @@ def kitchens():
     if request.method == 'GET':
         update_kitchen_statuses()
         kitchens = database_ref.execute(
-            'select * from account, kitchen where account.id = kitchen.account_id'
+            'select * from kitchen join account on account.id = kitchen.account_id'
         ).fetchall()
 
         kitchen_info_list = []
@@ -40,6 +40,13 @@ def kitchens():
 @blue_print.route('dashboard/schedules', methods=('GET', 'POST'))
 @login_required
 def schedules():
+    data_base = get_db()
+    if request.method == "GET":
+        schedules = data_base.execute(
+            'select * from schedule'
+        ).fetchall()
+
+        
     return render_template('dashboard/admin_dashboard.html')
 
 

@@ -9,14 +9,15 @@
     flex-direction: row;
     height: 100dvh;
 }
-.kitchen-info-section{
+
+.info-section{
     background-color: #98002E;
     padding: 20px;
     width: 100%;
     overflow-y: scroll;
 }
 
-.kitchen-info-dropdown{
+.info-dropdown{
     padding: 10px;
     margin: 10px 0px;
     border: 1px none;
@@ -43,7 +44,7 @@
     transition: transform 0.3s ease;
 }
 
-.kitchen-info-dropdown[open] .info-dropdown-summary svg {
+.info-dropdown[open] .info-dropdown-summary svg {
     transform: rotate(90deg);
 }
 .info-dropdown-summary{
@@ -58,5 +59,5 @@
 }
 
 .dashboard-nav{
-    width: 20%;
+    width: 20%
 }
