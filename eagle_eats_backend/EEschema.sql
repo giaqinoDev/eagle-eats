@@ -38,7 +38,7 @@ create table kitchen(
             )
     ) unique,
     description text,
-    isOperating boolean,
+    operation text check(operation in ('Breakfast', 'Lunch', 'Dinner', 'Closed')),
     schedule_id integer default null,
     menu_id integer default null,
     foreign key (account_id) references account(id) on delete cascade,

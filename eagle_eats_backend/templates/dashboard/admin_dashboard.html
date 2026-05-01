@@ -25,7 +25,7 @@
                                     <div class="summary-header">
                                         {{lucide('chevron-right', size=20)}}
                                         {{ kitchen.info.username}}
-                                        {%if kitchen.info.isOperating == 0%}
+                                        {%if kitchen.info.operation == 'Closed'%}
                                             {{lucide('dot', size=40, style="color: red;")}}
                                         {%else%}
                                             {{lucide('dot', size=40, style="color: green;")}}
@@ -33,6 +33,7 @@
                                     </div>
                             </summary>
                             <div class="dropdown-content">
+                                <p style="display: flex; align-items: center;">{{lucide("info", size=20, style="margin-right: 5px;")}} Current Operations: {{kitchen.operation}}</p>
                                 {%if kitchen.schedule %}
                                     <p style="display: flex; align-items: center;">{{lucide('calendar-fold', size=20, style="margin-right: 5px;")}} {{kitchen.schedule.name}}</p>
                                     <div style="overflow-x: scroll;">
