@@ -15,9 +15,9 @@ class kitchen_info:
         self.schedule =schedule
         self.menu = menu
 
-@blue_print.route('dashboard', methods = ('GET', 'POST'))
+@blue_print.route('dashboard/kitchens', methods = ('GET', 'POST'))
 @login_required
-def dashboard():
+def kitchens():
     database_ref = get_db()
     if request.method == 'GET':
         update_kitchen_statuses()
@@ -36,6 +36,11 @@ def dashboard():
                 kitchen_info_list.append(kitchen_info(operation, kitchen, weekly_schedule, None))
 
     return render_template('dashboard/admin_dashboard.html', kitchens=kitchen_info_list)
+
+@blue_print.route('dashboard/schedules', methods=('GET', 'POST'))
+@login_required
+def schedules():
+    return render_template('dashboard/admin_dashboard.html')
 
 
 

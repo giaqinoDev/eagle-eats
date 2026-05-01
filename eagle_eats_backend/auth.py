@@ -155,7 +155,7 @@ def get_dashboard():
     elif role == 'kitchen':
         return redirect(url_for('kitchen.dashboard'))
     elif role == 'admin':
-        return redirect(url_for('admin.dashboard'))
+        return redirect(url_for('admin.kitchens'))
 
 @blue_print.route('/logout', methods = ('POST', ))
 def logout():
@@ -175,7 +175,7 @@ def load_logged_in_user():
             g.user = get_db().execute(
                 'select * from account where role = "admin"'
             ).fetchone()
-            redirect(url_for('admin.dashboard'))
+            redirect(url_for('admin.kitchens'))
         else:
             g.user = get_db().execute(
                 f'select * from account join {role} on account.id = {role}.account_id'
@@ -189,6 +189,8 @@ def login_required(view):
         if g.user is None:
             return redirect(url_for('auth.login'))
         elif role != request.endpoint.split(".")[0]:
+            if role == 'admin':
+                return redirect(url_for('admin.kitchens'))
             return redirect(url_for(f'{role}.dashboard'))
         return view(**kwargs)
     return wrapped_view
