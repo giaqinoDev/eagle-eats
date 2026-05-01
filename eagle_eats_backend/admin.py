@@ -65,6 +65,63 @@ def schedules():
 
     return render_template('dashboard/admin_dashboard.html', schedules_list = schedule_info_list)
 
+@blue_print.route('dashboard/schedules/create', methods=('GET', 'POST'))
+@login_required
+def create_schedule():
+    print("Create a new Schedule")
+    if request.method == 'POST':
+        name = request.form['name']
+
+        #Breakfast
+        mon_b_open = request.form['mon_b_open']
+        mon_b_closed = request.form['mon_b_closed']
+        tue_b_open = request.form['tue_b_open']
+        tue_b_closed = request.form['tue_b_closed']
+        wed_b_open = request.form['wed_b_open']
+        web_b_closed = request.form['wed_b_closed']
+        thur_b_open = request.form['thur_b_open']
+        thur_b_closed = request.form['thur_b_closed']
+        fri_b_open = request.form['fri_b_open']
+        fri_b_closed = request.form['fri_b_closed']
+        sat_b_open = request.form['sat_b_open']
+        sat_b_closed = request.form['sat_b_closed']
+        sun_b_open = request.form['sun_b_open']
+        sun_b_closed = request.form['sun_b_closed']
+
+        #Lunch
+        mon_l_open = request.form['mon_l_open']
+        mon_l_closed = request.form['mon_l_closed']
+        tue_l_open = request.form['tue_l_open']
+        tue_l_closed = request.form['tue_l_closed']
+        wed_l_open = request.form['wed_l_open']
+        web_l_closed = request.form['wed_l_closed']
+        thur_l_open = request.form['thur_l_open']
+        thur_l_closed = request.form['thur_l_closed']
+        fri_l_open = request.form['fri_l_open']
+        fri_l_closed = request.form['fri_l_closed']
+        sat_l_open = request.form['sat_l_open']
+        sat_l_closed = request.form['sat_l_closed']
+        sun_l_open = request.form['sun_l_open']
+        sun_l_closed = request.form['sun_l_closed']
+
+        #Dinner
+        mon_d_open = request.form['mon_d_open']
+        mon_d_closed = request.form['mon_d_closed']
+        tue_d_open = request.form['tue_d_open']
+        tue_d_closed = request.form['tue_d_closed']
+        wed_d_open = request.form['wed_d_open']
+        web_d_closed = request.form['wed_d_closed']
+        thur_d_open = request.form['thur_d_open']
+        thur_d_closed = request.form['thur_d_closed']
+        fri_d_open = request.form['fri_d_open']
+        fri_d_closed = request.form['fri_d_closed']
+        sat_d_open = request.form['sat_d_open']
+        sat_d_closed = request.form['sat_d_closed']
+        sun_d_open = request.form['sun_d_open']
+        sun_d_closed = request.form['sun_d_closed']
+
+    return render_template('dashboard/schedule_creation.html')
+
 
 
 

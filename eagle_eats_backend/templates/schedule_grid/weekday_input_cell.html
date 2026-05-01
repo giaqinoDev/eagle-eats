@@ -1,0 +1,147 @@
+<td class="slot" data-day="sunday" data-meal="{{meal}}">
+    {%if schedule_obj is not none%}
+        <div class="time-field-container">
+            <input type="time" value="{{schedule_obj.week['1'][meal_open]}}" name="{{'sun_' + form_name_open}}" class="time-field">
+            <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+        </div>
+        <div class="time-field-container">
+            <input type="time" value="{{schedule_obj.week['1'][meal_closed]}}" name="{{'sun_' + form_name_closed}}" class="time-field">
+            <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+        </div>
+    {%else%}
+        <div class="time-field-container">
+            <input type="time" value="" name="{{'sun_' + form_name_open}}" class="time-field">
+            <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+        </div>
+        <div class="time-field-container">
+            <input type="time" value="" name="{{'sun_' + form_name_closed}}" class="time-field">
+            <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+        </div>
+    {%endif%}
+</td>
+<td class="slot" data-day="monday" data-meal="{{meal}}">
+    {%if schedule_obj is not none%}
+    <div class="time-field-container">
+        <input type="time" value="{{schedule_obj.week['2'][meal_open]}}" name="{{'mon_' + form_name_open}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    <div class="time-field-container">
+        <input type="time" value="{{schedule_obj.week['2'][meal_closed]}}" name="{{'mon_' + form_name_closed}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    {%else%}
+    <div class="time-field-container">
+        <input type="time" value="" name="{{'mon_' + form_name_open}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    <div class="time-field-container">
+        <input type="time" value="" name="{{'mon_' + form_name_closed}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    {%endif%}
+</td>
+<td class="slot" data-day="tuesday" data-meal="{{meal}}">
+    {%if schedule_obj is not none%}
+    <div class="time-field-container">
+        <input type="time" value="{{schedule_obj.week['3'][meal_open]}}" name="{{'tue_' + form_name_open}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    <div class="time-field-container">
+        <input type="time" value="{{schedule_obj.week['3'][meal_closed]}}" name="{{'tue_' + form_name_closed}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    {%else%}
+    <div class="time-field-container">
+        <input type="time" value="" name="{{'tue_' + form_name_open}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    <div class="time-field-container">
+        <input type="time" value="" name="{{'tue_' + form_name_closed}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    {%endif%}
+</td>
+<td class="slot" data-day="wednesday" data-meal="{{meal}}">
+    {%if schedule_obj is not none%}
+    <div class="time-field-container">
+        <input type="time" value="{{schedule_obj.week['4'][meal_open]}}" name="{{'wed_' + form_name_open}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    <div class="time-field-container">
+        <input type="time" value="{{schedule_obj.week['4'][meal_closed]}}" name="{{'wed_' + form_name_closed}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    {%else%}
+    <div class="time-field-container">
+        <input type="time" value="" name="{{'wed_' + form_name_open}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    <div class="time-field-container">
+        <input type="time" value="" name="{{'wed_' + form_name_closed}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    {%endif%}
+</td>
+<td class="slot" data-day="thursday" data-meal="{{meal}}">
+    {%if schedule_obj is not none%}
+    <div class="time-field-container">
+        <input type="time" value="{{schedule_obj.week['5'][meal_open]}}" name="{{'thur_' + form_name_open}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    <div class="time-field-container">
+        <input type="time" value="{{schedule_obj.week['5'][meal_closed]}}" name="{{'thur_' + form_name_closed}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    {%else%}
+    <div class="time-field-container">
+        <input type="time" value="" name="{{'thur_' + form_name_open}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    <div class="time-field-container">
+        <input type="time" value="" name="{{'thur_' + form_name_closed}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    {%endif%}
+</td>
+<td class="slot" data-day="friday" data-meal="{{meal}}">
+    {%if schedule_obj is not none%}
+    <div class="time-field-container">
+        <input type="time" value="{{schedule_obj.week['6'][meal_open]}}" name="{{'fri_' + form_name_open}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    <div class="time-field-container">
+        <input type="time" value="{{schedule_obj.week['6'][meal_closed]}}" name="{{'fri_' + form_name_closed}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    {%else%}
+    <div class="time-field-container">
+        <input type="time" value="" name="{{'fri_' + form_name_open}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    <div class="time-field-container">
+        <input type="time" value="" name="{{'fri_' + form_name_closed}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    {%endif%}
+</td>
+<td class="slot" data-day="saturday" data-meal="{{meal}}">
+    {%if schedule_obj is not none%}
+    <div class="time-field-container">
+        <input type="time" value="{{schedule_obj.week['7'][meal_open]}}" name="{{'sat_' + form_name_open}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    <div class="time-field-container">
+        <input type="time" value="{{schedule_obj.week['7'][meal_closed]}}" name="{{'sat_' + form_name_closed}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    {%else%}
+    <div class="time-field-container">
+        <input type="time" value="" name="{{'sat_' + form_name_open}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    <div class="time-field-container">
+        <input type="time" value="" name="{{'sat_' + form_name_closed}}" class="time-field">
+        <button type="button" onclick="this.previousElementSibling.value=''" class="clear-btn">{{lucide('x')}}</button>
+    </div>
+    {%endif%}
+</td>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{url_for('static', filename = 'schedule_static.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename = 'time_input.css')}}">
+    </head>
+    <body>
+        <div>
+            <form method="post">
+                <label for="name">Schedule Name</label>
+                <input name="name" required>
+                <div style="overflow-x: scroll;">
+                    {%set schedule_obj = none%}
+                    {%include 'schedule_grid/schedule_input.html'%}
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

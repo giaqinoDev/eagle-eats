@@ -61,3 +61,11 @@
 .dashboard-nav{
     width: 20%
 }
+
+.page-header{
+    display: flex;
+    align-items: center;
+}
+.header-buttons{
+    margin-left: auto;
+}
