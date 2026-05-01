@@ -1,0 +1,22 @@
+
+    <h2>Schedules {{lucide('calendar-fold', size=20, style="margin-right: 5px;")}}</h2>
+    {%for schedule in schedules_list%}
+            <details class="info-dropdown">
+                <summary class="info-dropdown-summary">
+                        <div class="summary-header">
+                            {{lucide('chevron-right', size=20)}}
+                            {{ schedule.name}}
+                        </div>
+                </summary>
+                <div class="dropdown-content">
+                        <div>
+                            <p style="display: flex; align-items: center;">{{lucide("info", size=20, style="margin-right: 5px;")}} Assigned To: {{schedule.dependents}}</p>
+                        </div>
+                        <div style="overflow-x: scroll;">
+                            {%set schedule_obj = schedule.schedule%}
+                            {%include "schedule_grid/schedule_static.html"%}
+                        </div>
+                </div>
+
+            </details>
+    {%endfor%}

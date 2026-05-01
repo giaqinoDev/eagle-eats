@@ -1,21 +1,21 @@
 <td class="slot" data-day="sunday" data-meal="{{meal}}">
-    <p >{%if closed_sunday == false%}{{kitchen.schedule.week['1'][meal_open]}} - {{kitchen.schedule.week['1'][meal_closed]}}{%endif%}</p>
+    <p >{%if closed_sunday == false%}{{schedule_obj.week['1'][meal_open]}} - {{schedule_obj.week['1'][meal_closed]}}{%endif%}</p>
 </td>
 <td class="slot" data-day="monday" data-meal="{{meal}}">
-    <p >{%if closed_monday == false%}{{kitchen.schedule.week['2'][meal_open]}} - {{kitchen.schedule.week['2'][meal_closed]}}{%endif%}</p>
+    <p >{%if closed_monday == false%}{{schedule_obj.week['2'][meal_open]}} - {{schedule_obj.week['2'][meal_closed]}}{%endif%}</p>
 </td>
 <td class="slot" data-day="tuesday" data-meal="{{meal}}">
-    <p >{%if closed_tuesday == false%}{{kitchen.schedule.week['3'][meal_open]}} - {{kitchen.schedule.week['3'][meal_closed]}}{%endif%}</p>
+    <p >{%if closed_tuesday == false%}{{schedule_obj.week['3'][meal_open]}} - {{schedule_obj.week['3'][meal_closed]}}{%endif%}</p>
 </td>
 <td class="slot" data-day="wednesday" data-meal="{{meal}}">
-    <p >{%if closed_wednesday == false%}{{kitchen.schedule.week['4'][meal_open]}} - {{kitchen.schedule.week['4'][meal_closed]}}{%endif%}</p>
+    <p >{%if closed_wednesday == false%}{{schedule_obj.week['4'][meal_open]}} - {{schedule_obj.week['4'][meal_closed]}}{%endif%}</p>
 </td>
 <td class="slot" data-day="thursday" data-meal="{{meal}}">
-    <p >{%if closed_thursday == false%}{{kitchen.schedule.week['5'][meal_open]}} - {{kitchen.schedule.week['5'][meal_closed]}}{%endif%}</p>
+    <p >{%if closed_thursday == false%}{{schedule_obj.week['5'][meal_open]}} - {{schedule_obj.week['5'][meal_closed]}}{%endif%}</p>
 </td>
 <td class="slot" data-day="friday" data-meal="{{meal}}">
-    <p >{%if closed_friday == false%}{{kitchen.schedule.week['6'][meal_open]}} - {{kitchen.schedule.week['6'][meal_closed]}}{%endif%}</p>
+    <p >{%if closed_friday == false%}{{schedule_obj.week['6'][meal_open]}} - {{schedule_obj.week['6'][meal_closed]}}{%endif%}</p>
 </td>
 <td class="slot" data-day="saturday" data-meal="{{meal}}">
-    <p>{%if closed_saturday == false%}{{kitchen.schedule.week['7'][meal_open]}} - {{kitchen.schedule.week['7'][meal_closed]}}{%endif%}</p>
+    <p>{%if closed_saturday == false%}{{schedule_obj.week['7'][meal_open]}} - {{schedule_obj.week['7'][meal_closed]}}{%endif%}</p>
 </td>

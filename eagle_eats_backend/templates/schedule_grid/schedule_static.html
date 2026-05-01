@@ -1,10 +1,10 @@
-{%set closed_sunday = kitchen.schedule.week['1'].isClosed%}
-{%set closed_monday = kitchen.schedule.week['2'].isClosed%}
-{%set closed_tuesday = kitchen.schedule.week['3'].isClosed%}
-{%set closed_wednesday = kitchen.schedule.week['4'].isClosed%}
-{%set closed_thursday = kitchen.schedule.week['5'].isClosed%}
-{%set closed_friday = kitchen.schedule.week['6'].isClosed%}
-{%set closed_saturday = kitchen.schedule.week['7'].isClosed%}
+{%set closed_sunday = schedule_obj.week['1'].isClosed%}
+{%set closed_monday = schedule_obj.week['2'].isClosed%}
+{%set closed_tuesday = schedule_obj.week['3'].isClosed%}
+{%set closed_wednesday = schedule_obj.week['4'].isClosed%}
+{%set closed_thursday = schedule_obj.week['5'].isClosed%}
+{%set closed_friday = schedule_obj.week['6'].isClosed%}
+{%set closed_saturday = schedule_obj.week['7'].isClosed%}
 <table class="schedule-grid">
     <thead>
         <tr>

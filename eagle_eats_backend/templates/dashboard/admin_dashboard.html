@@ -28,6 +28,8 @@
             <div class="info-section">
                 {%if request.path == '/admin/dashboard/kitchens'%}
                     {%include "dashboard/kitchen_info_section.html"%}
+                {%elif request.path == '/admin/dashboard/schedules'%}
+                    {%include "dashboard/schedules_info_section.html"%}
                 {%endif%}
             </div>
             

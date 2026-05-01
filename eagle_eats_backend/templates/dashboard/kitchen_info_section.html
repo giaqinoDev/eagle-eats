@@ -18,6 +18,7 @@
                     {%if kitchen.schedule %}
                         <p style="display: flex; align-items: center;">{{lucide('calendar-fold', size=20, style="margin-right: 5px;")}} {{kitchen.schedule.name}}</p>
                         <div style="overflow-x: scroll;">
+                            {%set schedule_obj = kitchen.schedule%}
                             {%include "schedule_grid/schedule_static.html"%}
                         </div>
                     {%else%}

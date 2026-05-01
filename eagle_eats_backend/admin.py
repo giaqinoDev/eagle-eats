@@ -15,6 +15,13 @@ class kitchen_info:
         self.schedule =schedule
         self.menu = menu
 
+class schedule_info:
+    def __init__(self, id, name, dependents, schedule):
+        self.id = id
+        self.name = name
+        self.dependents = dependents
+        self.schedule = schedule
+
 @blue_print.route('dashboard/kitchens', methods = ('GET', 'POST'))
 @login_required
 def kitchens():
@@ -42,12 +49,21 @@ def kitchens():
 def schedules():
     data_base = get_db()
     if request.method == "GET":
+        dependents_name_list = ''
         schedules = data_base.execute(
             'select * from schedule'
         ).fetchall()
+        kitchen_dependents = data_base.execute(
+            'select username from account join kitchen on account.id = kitchen.account_id join schedule on kitchen.schedule_id = schedule.id'
+        ).fetchall()
+        for dependent in kitchen_dependents:
+            dependents_name_list = str(dependent['username']) + ","
+        schedule_info_list = []
+        for schedule in schedules:
+            weekly_schedule = get_organized_schedule_info(schedule['id'])
+            schedule_info_list.append(schedule_info(schedule['id'], schedule['name'], dependents_name_list, weekly_schedule))
 
-        
-    return render_template('dashboard/admin_dashboard.html')
+    return render_template('dashboard/admin_dashboard.html', schedules_list = schedule_info_list)
 
 
 
