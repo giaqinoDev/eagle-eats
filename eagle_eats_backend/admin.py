@@ -72,6 +72,14 @@ def create_schedule():
     if request.method == 'POST':
         name = request.form['name']
 
+        sunday_closed = request.form['sunday_closed']
+        monday_closed = request.form['monday_closed']
+        tuesday_closed = request.form['tuesday_closed']
+        wednesday_closed = request.form['wednesday_closed']
+        thursday_closed = request.form['thursday_closed']
+        friday_closed = request.form['friday_closed']
+        saturday_closed = request.form['saturday_closed']
+        
         #Breakfast
         mon_b_open = request.form['mon_b_open']
         mon_b_closed = request.form['mon_b_closed']
