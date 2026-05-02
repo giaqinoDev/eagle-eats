@@ -6,6 +6,7 @@ from eagle_eats_backend.data_base import get_db
 from eagle_eats_backend.auth import login_required
 from eagle_eats_backend.db_utils.kitchens_util import update_kitchen_statuses
 from eagle_eats_backend.db_utils.schedules_util import get_organized_schedule_info
+from datetime import datetime
 
 blue_print = Blueprint('admin', __name__, url_prefix="/admin")
 class kitchen_info:
@@ -71,65 +72,126 @@ def create_schedule():
     print("Create a new Schedule")
     if request.method == 'POST':
         name = request.form['name']
+        inputed_schedule = generate_inputed_schedule(request)
+        error = schedule_validation(inputed_schedule)
 
-        sunday_closed = request.form['sunday_closed']
-        monday_closed = request.form['monday_closed']
-        tuesday_closed = request.form['tuesday_closed']
-        wednesday_closed = request.form['wednesday_closed']
-        thursday_closed = request.form['thursday_closed']
-        friday_closed = request.form['friday_closed']
-        saturday_closed = request.form['saturday_closed']
-        
-        #Breakfast
-        mon_b_open = request.form['mon_b_open']
-        mon_b_closed = request.form['mon_b_closed']
-        tue_b_open = request.form['tue_b_open']
-        tue_b_closed = request.form['tue_b_closed']
-        wed_b_open = request.form['wed_b_open']
-        web_b_closed = request.form['wed_b_closed']
-        thur_b_open = request.form['thur_b_open']
-        thur_b_closed = request.form['thur_b_closed']
-        fri_b_open = request.form['fri_b_open']
-        fri_b_closed = request.form['fri_b_closed']
-        sat_b_open = request.form['sat_b_open']
-        sat_b_closed = request.form['sat_b_closed']
-        sun_b_open = request.form['sun_b_open']
-        sun_b_closed = request.form['sun_b_closed']
-
-        #Lunch
-        mon_l_open = request.form['mon_l_open']
-        mon_l_closed = request.form['mon_l_closed']
-        tue_l_open = request.form['tue_l_open']
-        tue_l_closed = request.form['tue_l_closed']
-        wed_l_open = request.form['wed_l_open']
-        web_l_closed = request.form['wed_l_closed']
-        thur_l_open = request.form['thur_l_open']
-        thur_l_closed = request.form['thur_l_closed']
-        fri_l_open = request.form['fri_l_open']
-        fri_l_closed = request.form['fri_l_closed']
-        sat_l_open = request.form['sat_l_open']
-        sat_l_closed = request.form['sat_l_closed']
-        sun_l_open = request.form['sun_l_open']
-        sun_l_closed = request.form['sun_l_closed']
-
-        #Dinner
-        mon_d_open = request.form['mon_d_open']
-        mon_d_closed = request.form['mon_d_closed']
-        tue_d_open = request.form['tue_d_open']
-        tue_d_closed = request.form['tue_d_closed']
-        wed_d_open = request.form['wed_d_open']
-        web_d_closed = request.form['wed_d_closed']
-        thur_d_open = request.form['thur_d_open']
-        thur_d_closed = request.form['thur_d_closed']
-        fri_d_open = request.form['fri_d_open']
-        fri_d_closed = request.form['fri_d_closed']
-        sat_d_open = request.form['sat_d_open']
-        sat_d_closed = request.form['sat_d_closed']
-        sun_d_open = request.form['sun_d_open']
-        sun_d_closed = request.form['sun_d_closed']
-
+        if error is None:
+            #write to db
+            return None
+        flash(error)
     return render_template('dashboard/schedule_creation.html')
 
+def generate_inputed_schedule(request):
+    monday = {
+        "isClosed": request.form['monday_closed'],
+        "breakfast_open": request.form['mon_b_open'],
+        "breakfast_closed": request.form['mon_b_closed'],
+        "lunch_open": request.form['mon_l_open'],
+        "lunch_closed": request.form['mon_l_closed'],
+        "dinner_open": request.form['mon_d_open'],
+        "dinner_closed": request.form['mon_d_closed']
+    }
+    tuesday = {
+        "isClosed": request.form['tuesday_closed'],
+        "breakfast_open": request.form['tue_b_open'],
+        "breakfast_closed": request.form['tue_b_closed'],
+        "lunch_open": request.form['tue_l_open'],
+        "lunch_closed": request.form['tue_l_closed'],
+        "dinner_open": request.form['tue_d_open'],
+        "dinner_closed": request.form['tue_d_closed']
+    }
+    wednesday = {
+        "isClosed": request.form['wednesday_closed'],
+        "breakfast_open": request.form['wed_b_open'],
+        "breakfast_closed": request.form['wed_b_closed'],
+        "lunch_open": request.form['wed_l_open'],
+        "lunch_closed": request.form['wed_l_closed'],
+        "dinner_open": request.form['wed_d_open'],
+        "dinner_closed": request.form['wed_d_closed']
+    }
+    thursday = {
+        "isClosed": request.form['thursday_closed'],
+        "breakfast_open": request.form['thur_b_open'],
+        "breakfast_closed": request.form['thur_b_closed'],
+        "lunch_open": request.form['thur_l_open'],
+        "lunch_closed": request.form['thur_l_closed'],
+        "dinner_open": request.form['thur_d_open'],
+        "dinner_closed": request.form['thur_d_closed']
+    }
+    friday = {
+        "isClosed": request.form['friday_closed'],
+        "breakfast_open": request.form['fri_b_open'],
+        "breakfast_closed": request.form['fri_b_closed'],
+        "lunch_open": request.form['fri_l_open'],
+        "lunch_closed": request.form['fri_l_closed'],
+        "dinner_open": request.form['fri_d_open'],
+        "dinner_closed": request.form['fri_d_closed']
+    }
+    saturday = {
+        "isClosed": request.form['sat_closed'],
+        "breakfast_open": request.form['sat_b_open'],
+        "breakfast_closed": request.form['sat_b_closed'],
+        "lunch_open": request.form['sat_l_open'],
+        "lunch_closed": request.form['sat_l_closed'],
+        "dinner_open": request.form['sat_d_open'],
+        "dinner_closed": request.form['sat_d_closed']
+    }
+    sunday = {
+        "isClosed": request.form['sun_closed'],
+        "breakfast_open": request.form['sun_b_open'],
+        "breakfast_closed": request.form['sun_b_closed'],
+        "lunch_open": request.form['sun_l_open'],
+        "lunch_closed": request.form['sun_l_closed'],
+        "dinner_open": request.form['sun_d_open'],
+        "dinner_closed": request.form['sun_d_closed']
+    }
 
+    return {
+        "monday": monday,
+        "tuesday": tuesday,
+        "wednesday": wednesday,
+        "thursday": thursday,
+        "friday": friday,
+        "saturday": saturday,
+        "sunday": sunday
+    }
+
+def schedule_validation(schedule):
+    errorType_empty = "Please set both start and end times to either none or concrete times for "
+    errorType_invalid = "Invalid hours: start time must be before end time for "
+    for key, value in schedule.items():
+        week_day = schedule[key]
+        breakfast_open_time = parse_time(week_day['breakfast_open'])
+        breakfast_closed_time = parse_time(week_day['breakfast_closed'])
+        lunch_open_time = parse_time(week_day['lunch_open'])
+        lunch_closed_time = parse_time(week_day['lunch_closed'])
+        dinner_open_time = parse_time(week_day['dinner_open'])
+        dinner_closed_time = parse_time(week_day['dinner_closed'])
+
+        if not (breakfast_open_time is None and breakfast_closed_time is None):
+            if((breakfast_open_time is None and breakfast_closed_time) or (breakfast_open_time and breakfast_closed_time is None)):
+                return errorType_empty + str(key) + "breakfast."
+            elif breakfast_open_time >= breakfast_closed_time:
+                return errorType_invalid + str(key) + "breakfast."
+        
+        if not (lunch_open_time is None and lunch_closed_time is None):
+            if((lunch_open_time is None and lunch_closed_time) or (lunch_open_time and lunch_closed_time is None)):
+                return errorType_empty + str(key) + "lunch."
+            elif breakfast_open_time > breakfast_closed_time:
+                return errorType_invalid + str(key) + "lunch."
+        
+        if not (dinner_open_time is None and dinner_closed_time is None):
+            if((dinner_open_time is None and dinner_closed_time) or (dinner_open_time and dinner_closed_time is None)):
+                return errorType_empty + str(key) + "dinner."
+            elif breakfast_open_time > breakfast_closed_time:
+                return errorType_invalid + str(key) + "dinner."
+        
+    return None
+        
+
+def parse_time(value):
+    if value is None or value == "":
+        return None
+    return datetime.strptime(value, "%H:%M").time()
 
 

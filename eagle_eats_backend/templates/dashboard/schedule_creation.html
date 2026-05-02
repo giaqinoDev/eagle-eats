@@ -3,9 +3,10 @@
     <head>
         <link rel="stylesheet" href="{{url_for('static', filename = 'schedule_static.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename = 'time_input.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename = 'create_schedule_page.css')}}">
     </head>
     <body>
-        <div>
+        <div class="schedule-creation-form">
             <form method="post">
                 <label for="name">Schedule Name</label>
                 <input name="name" required>
