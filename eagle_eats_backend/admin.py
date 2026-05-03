@@ -50,17 +50,18 @@ def kitchens():
 def schedules():
     data_base = get_db()
     if request.method == "GET":
-        dependents_name_list = ''
         schedules = data_base.execute(
             'select * from schedule'
         ).fetchall()
-        kitchen_dependents = data_base.execute(
-            'select username from account join kitchen on account.id = kitchen.account_id join schedule on kitchen.schedule_id = schedule.id'
-        ).fetchall()
-        for dependent in kitchen_dependents:
-            dependents_name_list = str(dependent['username']) + ","
         schedule_info_list = []
         for schedule in schedules:
+            dependents_name_list = ''
+            kitchen_dependents = data_base.execute(
+                'select username from account join kitchen on account.id = kitchen.account_id join schedule on kitchen.schedule_id = ?',
+                (schedule['id'],)
+            ).fetchall()
+            for dependent in kitchen_dependents:
+                dependents_name_list = str(dependent['username']) + ","
             weekly_schedule = get_organized_schedule_info(schedule['id'])
             schedule_info_list.append(schedule_info(schedule['id'], schedule['name'], dependents_name_list, weekly_schedule))
 
@@ -78,10 +79,13 @@ def create_schedule():
 
         if error is None:
             #write to db
-            query_schedule(inputed_schedule,name)
+            query_schedule(inputed_schedule, name)
             redirect(url_for('admin.schedules'))
-        flash(error)
-    return render_template('dashboard/schedule_creation.html')
+        else:
+            form_data = request.form
+            flash(error)
+            return render_template('dashboard/schedule_creation.html', input_schedule=inputed_schedule)
+    return render_template('dashboard/schedule_creation.html', input_schedule=None)
 
 def generate_inputed_schedule(input_request):
     monday = {
@@ -250,8 +254,12 @@ def query_schedule(schedule_inputs, schedule_name):
             dinner_closed)
         )
     data_base.commit()
-        
 
+@blue_print.route('/cancel', methods = ('POST', ))
+def cancel_schedule_creation():
+    if request.method == 'POST':
+        return redirect(url_for('admin.schedules'))
+    
 def parse_time(value):
     if value is None or value == "":
         return None

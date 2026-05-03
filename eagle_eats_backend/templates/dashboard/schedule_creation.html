@@ -14,10 +14,12 @@
                 <label for="name">Schedule Name</label>
                 <input name="name" required>
                 <div style="overflow-x: scroll;">
-                    {%set schedule_obj = none%}
                     {%include 'schedule_grid/schedule_input.html'%}
                 </div>
                 <input type="submit" value="Submit">
+            </form>
+            <form action="{{url_for('admin.cancel_schedule_creation')}}" method="post">
+                    <button type="submit">Cancel</button>
             </form>
         </div>
     </body>

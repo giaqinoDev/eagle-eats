@@ -1,11 +1,11 @@
-{%if schedule_obj is not none%}
-    {%set closed_sunday = schedule_obj.week['1'].isClosed%}
-    {%set closed_monday = schedule_obj.week['2'].isClosed%}
-    {%set closed_tuesday = schedule_obj.week['3'].isClosed%}
-    {%set closed_wednesday = schedule_obj.week['4'].isClosed%}
-    {%set closed_thursday = schedule_obj.week['5'].isClosed%}
-    {%set closed_friday = schedule_obj.week['6'].isClosed%}
-    {%set closed_saturday = schedule_obj.week['7'].isClosed%}
+{%if input_schedule is not none%}
+    {%set closed_sunday = input_schedule['1'].isClosed%}
+    {%set closed_monday = input_schedule['2'].isClosed%}
+    {%set closed_tuesday = input_schedule['3'].isClosed%}
+    {%set closed_wednesday = input_schedule['4'].isClosed%}
+    {%set closed_thursday = input_schedule['5'].isClosed%}
+    {%set closed_friday = input_schedule['6'].isClosed%}
+    {%set closed_saturday = input_schedule['7'].isClosed%}
 {%endif%}
 <table class="schedule-grid">
     <thead>
