@@ -70,7 +70,6 @@ def schedules():
 @blue_print.route('dashboard/schedules/create', methods=('GET', 'POST'))
 @login_required
 def create_schedule():
-    print("Create a new Schedule")
     if request.method == 'POST':
         name = request.form['name']
         inputed_schedule = generate_inputed_schedule(request)
@@ -80,16 +79,15 @@ def create_schedule():
         if error is None:
             #write to db
             query_schedule(inputed_schedule, name)
-            redirect(url_for('admin.schedules'))
+            return redirect(url_for('admin.schedules'))
         else:
-            form_data = request.form
             flash(error)
             return render_template('dashboard/schedule_creation.html', input_schedule=inputed_schedule)
     return render_template('dashboard/schedule_creation.html', input_schedule=None)
 
 def generate_inputed_schedule(input_request):
     monday = {
-        "isClosed": 1 if request.form.get('monday_closed') else 0,
+        "isClosed": 1 if input_request.form.get('monday_closed') else 0,
         "breakfast_open": input_request.form['mon_b_open'],
         "breakfast_closed": input_request.form['mon_b_closed'],
         "lunch_open": input_request.form['mon_l_open'],
@@ -98,7 +96,7 @@ def generate_inputed_schedule(input_request):
         "dinner_closed": input_request.form['mon_d_closed']
     }
     tuesday = {
-        "isClosed": 1 if request.form.get('tuesday_closed') else 0,
+        "isClosed": 1 if input_request.form.get('tuesday_closed') else 0,
         "breakfast_open": input_request.form['tue_b_open'],
         "breakfast_closed": input_request.form['tue_b_closed'],
         "lunch_open": input_request.form['tue_l_open'],
@@ -107,7 +105,7 @@ def generate_inputed_schedule(input_request):
         "dinner_closed": input_request.form['tue_d_closed']
     }
     wednesday = {
-        "isClosed": 1 if request.form.get('wednesday_closed') else 0,
+        "isClosed": 1 if input_request.form.get('wednesday_closed') else 0,
         "breakfast_open": input_request.form['wed_b_open'],
         "breakfast_closed": input_request.form['wed_b_closed'],
         "lunch_open": input_request.form['wed_l_open'],
@@ -116,7 +114,7 @@ def generate_inputed_schedule(input_request):
         "dinner_closed": input_request.form['wed_d_closed']
     }
     thursday = {
-        "isClosed": 1 if request.form.get('thursday_closed') else 0,
+        "isClosed": 1 if input_request.form.get('thursday_closed') else 0,
         "breakfast_open": input_request.form['thur_b_open'],
         "breakfast_closed": input_request.form['thur_b_closed'],
         "lunch_open": input_request.form['thur_l_open'],
@@ -125,7 +123,7 @@ def generate_inputed_schedule(input_request):
         "dinner_closed": input_request.form['thur_d_closed']
     }
     friday = {
-        "isClosed": 1 if request.form.get('friday_closed') else 0,
+        "isClosed": 1 if input_request.form.get('friday_closed') else 0,
         "breakfast_open": input_request.form['fri_b_open'],
         "breakfast_closed": input_request.form['fri_b_closed'],
         "lunch_open": input_request.form['fri_l_open'],
@@ -134,7 +132,7 @@ def generate_inputed_schedule(input_request):
         "dinner_closed": input_request.form['fri_d_closed']
     }
     saturday = {
-        "isClosed": 1 if request.form.get('saturday_closed') else 0,
+        "isClosed": 1 if input_request.form.get('saturday_closed') else 0,
         "breakfast_open": input_request.form['sat_b_open'],
         "breakfast_closed": input_request.form['sat_b_closed'],
         "lunch_open": input_request.form['sat_l_open'],
@@ -143,7 +141,7 @@ def generate_inputed_schedule(input_request):
         "dinner_closed": input_request.form['sat_d_closed']
     }
     sunday = {
-        "isClosed": 1 if request.form.get('sunday_closed') else 0,
+        "isClosed": 1 if input_request.form.get('sunday_closed') else 0,
         "breakfast_open": input_request.form['sun_b_open'],
         "breakfast_closed": input_request.form['sun_b_closed'],
         "lunch_open": input_request.form['sun_l_open'],
@@ -153,13 +151,13 @@ def generate_inputed_schedule(input_request):
     }
 
     return {
+        "1": sunday,
         "2": monday,
         "3": tuesday,
         "4": wednesday,
         "5": thursday,
         "6": friday,
-        "7": saturday,
-        "1": sunday
+        "7": saturday
     }
 
 def schedule_validation(schedule):
@@ -200,13 +198,13 @@ def schedule_validation(schedule):
         if not (lunch_open_time is None and lunch_closed_time is None):
             if((lunch_open_time is None and lunch_closed_time) or (lunch_open_time and lunch_closed_time is None)):
                 return errorType_empty + day_of_week + " lunch."
-            elif breakfast_open_time > breakfast_closed_time:
+            elif lunch_open_time > lunch_closed_time:
                 return errorType_invalid + day_of_week + " lunch."
         
         if not (dinner_open_time is None and dinner_closed_time is None):
             if((dinner_open_time is None and dinner_closed_time) or (dinner_open_time and dinner_closed_time is None)):
                 return errorType_empty + day_of_week + " dinner."
-            elif breakfast_open_time > breakfast_closed_time:
+            elif dinner_open_time > dinner_closed_time:
                 return errorType_invalid + day_of_week + " dinner."
         
     return None
@@ -261,7 +259,8 @@ def cancel_schedule_creation():
         return redirect(url_for('admin.schedules'))
     
 def parse_time(value):
-    if value is None or value == "":
+    if value == "":
+        print("EMPTY!!")
         return None
     return datetime.strptime(value, "%H:%M").time()
 
