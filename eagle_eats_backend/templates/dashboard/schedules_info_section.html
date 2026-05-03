@@ -1,10 +1,10 @@
     <div class="page-header">
         <h2>Schedules {{lucide('calendar-fold', size=20, style="margin-right: 5px;")}}</h2>
-        {%for schedule in schedules_list%}
         <a href="{{ url_for('admin.create_schedule') }}" class="header-buttons">
             <button>{{lucide("plus")}}</button>
         </a>
     </div>
+    {%for schedule in schedules_list%}
             <details class="info-dropdown">
                 <summary class="info-dropdown-summary">
                         <div class="summary-header">

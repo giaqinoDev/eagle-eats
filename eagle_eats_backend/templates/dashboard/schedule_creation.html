@@ -8,12 +8,16 @@
     <body>
         <div class="schedule-creation-form">
             <form method="post">
+                {%for message in get_flashed_messages()%}
+                    <div class="flash-error">{{message}}</div>
+                {%endfor%}
                 <label for="name">Schedule Name</label>
                 <input name="name" required>
                 <div style="overflow-x: scroll;">
                     {%set schedule_obj = none%}
                     {%include 'schedule_grid/schedule_input.html'%}
                 </div>
+                <input type="submit" value="Submit">
             </form>
         </div>
     </body>
