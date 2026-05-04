@@ -11,8 +11,10 @@
                 {%for message in get_flashed_messages()%}
                     <div class="flash-error">{{message}}</div>
                 {%endfor%}
+
                 <label for="name">Schedule Name</label>
-                <input name="name" required>
+                <input name="name" value="{{schedule_name}}" required>
+
                 <div style="overflow-x: scroll;">
                     {%include 'schedule_grid/schedule_input.html'%}
                 </div>

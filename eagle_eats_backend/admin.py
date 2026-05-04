@@ -253,6 +253,11 @@ def query_schedule(schedule_inputs, schedule_name):
         )
     data_base.commit()
 
+@blue_print.route('dashboard/schedules/<int:id>/update', methods=('GET', 'POST'))
+def update_schedule(id):
+    initial_schedule = get_organized_schedule_info(id)
+    return render_template('dashboard/schedule_creation.html', input_schedule=initial_schedule['week'], schedule_name=initial_schedule['name'])
+
 @blue_print.route('/cancel', methods = ('POST', ))
 def cancel_schedule_creation():
     if request.method == 'POST':

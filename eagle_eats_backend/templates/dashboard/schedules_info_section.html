@@ -13,13 +13,16 @@
                         </div>
                 </summary>
                 <div class="dropdown-content">
-                        <div>
-                            <p style="display: flex; align-items: center;">{{lucide("info", size=20, style="margin-right: 5px;")}} Assigned To: {{schedule.dependents}}</p>
-                        </div>
-                        <div style="overflow-x: scroll;">
-                            {%set schedule_obj = schedule.schedule%}
-                            {%include "schedule_grid/schedule_static.html"%}
-                        </div>
+                    <a href="{{url_for('admin.update_schedule', id=schedule.id)}}">
+                        <button>Edit</button>
+                    </a>
+                    <div>
+                        <p style="display: flex; align-items: center;">{{lucide("info", size=20, style="margin-right: 5px;")}} Assigned To: {{schedule.dependents}}</p>
+                    </div>
+                    <div style="overflow-x: scroll;">
+                        {%set schedule_obj = schedule.schedule%}
+                        {%include "schedule_grid/schedule_static.html"%}
+                    </div>
                 </div>
 
             </details>
