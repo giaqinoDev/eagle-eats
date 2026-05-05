@@ -23,6 +23,7 @@ class schedule_info:
         self.dependents = dependents
         self.schedule = schedule
 
+#-----------------Kitchen Stuff----------------------------------------------------------------------------------------------------
 @blue_print.route('dashboard/kitchens', methods = ('GET', 'POST'))
 @login_required
 def kitchens():
@@ -91,6 +92,8 @@ def update_kitchen_logistics(id):
         return redirect(url_for('admin.kitchens'))
     
     return render_template('dashboard/kitchen_info_updating.html', schedules=schedules_list , active_schedule_name=active_schedule_name, active_schedule_id=active_schedule_id)
+
+#-----------------Schedule Stuff---------------------------------------------------------------------------------------------------
 @blue_print.route('dashboard/schedules', methods=('GET', 'POST'))
 @login_required
 def schedules():
@@ -390,7 +393,12 @@ def query_schedule_update(schedule_id, input_name, schedule_input, original_sche
 def cancel_schedule_creation():
     if request.method == 'POST':
         return redirect(url_for('admin.schedules'))
-    
+
+@blue_print.route('/cancel/kitchen_update', methods = ('POST', ))
+def cancel_kitchen_info_update():
+    if request.method == 'POST':
+        return redirect(url_for('admin.kitchens'))
+#--------------------Helper functions--------------------------------------------------------------------------
 def parse_time(value):
     if value == "":
         print("EMPTY!!")
