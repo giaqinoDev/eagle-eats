@@ -45,6 +45,12 @@ def kitchens():
 
     return render_template('dashboard/admin_dashboard.html', kitchens=kitchen_info_list)
 
+@blue_print.route('dashboard/kitchens/<int:id>/update', methods=('GET', 'POST'))
+@login_required
+def update_kitchen_logistics(id):
+    if request.method == 'POST':
+        schedule_selected = request.form['schedule_dropdown']
+    return None
 @blue_print.route('dashboard/schedules', methods=('GET', 'POST'))
 @login_required
 def schedules():
@@ -254,10 +260,91 @@ def query_schedule(schedule_inputs, schedule_name):
     data_base.commit()
 
 @blue_print.route('dashboard/schedules/<int:id>/update', methods=('GET', 'POST'))
+@login_required
 def update_schedule(id):
     initial_schedule = get_organized_schedule_info(id)
+    if request.method == 'POST':
+        name = request.form['name']
+        inputed_schedule = generate_inputed_schedule(request)
+        error = schedule_validation(inputed_schedule)
+
+        if error is None:
+            #update db
+            query_schedule_update(id, name, inputed_schedule, initial_schedule)
+            return redirect(url_for('admin.schedules'))
+        else:
+            flash(error)
+            return render_template('dashboard/schedule_creation.html', input_schedule=inputed_schedule, schedule_name=name)
     return render_template('dashboard/schedule_creation.html', input_schedule=initial_schedule['week'], schedule_name=initial_schedule['name'])
 
+def query_schedule_update(schedule_id, input_name, schedule_input, original_schedule):
+    data_base = get_db()
+    #Check if name was changed
+    if input_name != original_schedule['name']:
+        data_base.execute(
+            'update schedule set name=? where id=?',
+            (input_name, schedule_id)
+        )
+    
+    for key, value in schedule_input.items():
+        weekday = schedule_input[key]
+
+        #inputed schedule data
+        isClosed = weekday['isClosed']
+        breakfast_open = weekday['breakfast_open']
+        breakfast_closed = weekday['breakfast_closed']
+        lunch_open = weekday['lunch_open']
+        lunch_closed = weekday['lunch_closed']
+        dinner_open = weekday['dinner_open']
+        dinner_closed = weekday['dinner_closed']
+
+        #original schedule data
+        isClosed_orig = original_schedule['week'][key]['isClosed']
+        breakfast_open_orig = original_schedule['week'][key]['breakfast_open']
+        breakfast_closed_orig = original_schedule['week'][key]['breakfast_closed']
+        lunch_open_orig = original_schedule['week'][key]['lunch_open']
+        lunch_closed_orig = original_schedule['week'][key]['lunch_closed']
+        dinner_open_orig = original_schedule['week'][key]['dinner_open']
+        dinner_closed_orig = original_schedule['week'][key]['dinner_closed']
+
+        if(isClosed != isClosed_orig):
+            data_base.execute(
+                'update kitchen_weekly_schedule set isClosed=? where schedule_id=? and day_of_week=?',
+                (isClosed, schedule_id, key)
+            )
+        if(breakfast_open != breakfast_open_orig):
+            data_base.execute(
+                'update kitchen_weekly_schedule set breakfast_open=? where schedule_id=? and day_of_week=?',
+                (breakfast_open, schedule_id, key)
+            )
+        if(breakfast_closed != breakfast_closed_orig):
+            data_base.execute(
+                'update kitchen_weekly_schedule set breakfast_closed=? where schedule_id=? and day_of_week=?',
+                (breakfast_closed, schedule_id, key)
+            )
+        if(lunch_open != lunch_open_orig):
+            data_base.execute(
+                'update kitchen_weekly_schedule set lunch_open=? where schedule_id=? and day_of_week=?',
+                (lunch_open, schedule_id, key)
+            )
+        if(lunch_closed != lunch_closed_orig):
+            data_base.execute(
+                'update kitchen_weekly_schedule set lunch_closed=? where schedule_id=? and day_of_week=?',
+                (lunch_closed, schedule_id, key)
+            )
+        if(dinner_open != dinner_open_orig):
+            data_base.execute(
+                'update kitchen_weekly_schedule set dinner_open=? where schedule_id=? and day_of_week=?',
+                (dinner_open, schedule_id, key)
+            )
+        if(dinner_closed != dinner_closed_orig):
+            data_base.execute(
+                'update kitchen_weekly_schedule set dinner_closed=? where schedule_id=? and day_of_week=?',
+                (dinner_closed, schedule_id, key)
+            )
+    
+    data_base.commit()
+    
 @blue_print.route('/cancel', methods = ('POST', ))
 def cancel_schedule_creation():
     if request.method == 'POST':

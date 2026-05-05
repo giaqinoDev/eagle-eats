@@ -18,7 +18,7 @@
                 <div style="overflow-x: scroll;">
                     {%include 'schedule_grid/schedule_input.html'%}
                 </div>
-                <input type="submit" value="Submit">
+                <input type="submit" value="{{'Submit' if request.path =='/admin/dashboard/schedules/create' else 'Update'}}">
             </form>
             <form action="{{url_for('admin.cancel_schedule_creation')}}" method="post">
                     <button type="submit">Cancel</button>

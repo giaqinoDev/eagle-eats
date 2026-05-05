@@ -47,12 +47,23 @@ def update_operation(weekly_schedule, kitchen):
     operation = "Closed"
 
     if days_schedule['isClosed'] == 0:
-        breakfast_open = datetime.strptime(days_schedule['breakfast_open'], "%H:%M").time()
-        breakfast_closed = datetime.strptime(days_schedule['breakfast_closed'], "%H:%M").time()
-        lunch_open = datetime.strptime(days_schedule['lunch_open'], "%H:%M").time()
-        lunch_closed = datetime.strptime(days_schedule['lunch_closed'], "%H:%M").time()
-        dinner_open = datetime.strptime(days_schedule['dinner_open'], "%H:%M").time()
-        dinner_closed = datetime.strptime(days_schedule['dinner_closed'], "%H:%M").time()
+        breakfast_accounted_for = False
+        lunch_acounted_for = False
+        dinner_accounted_for = False
+        if(days_schedule['breakfast_open'] != '' and days_schedule['breakfast_closed'] != ''):
+            breakfast_accounted_for = True
+            breakfast_open = datetime.strptime(days_schedule['breakfast_open'], "%H:%M").time()
+            breakfast_closed = datetime.strptime(days_schedule['breakfast_closed'], "%H:%M").time()
+        
+        if(days_schedule['lunch_open'] != '' and days_schedule['lunch_closed'] != ''):
+            lunch_acounted_for = True
+            lunch_open = datetime.strptime(days_schedule['lunch_open'], "%H:%M").time()
+            lunch_closed = datetime.strptime(days_schedule['lunch_closed'], "%H:%M").time()
+        
+        if(days_schedule['dinner_open'] != '' and days_schedule['dinner_closed'] != ''):
+            dinner_accounted_for = True
+            dinner_open = datetime.strptime(days_schedule['dinner_open'], "%H:%M").time()
+            dinner_closed = datetime.strptime(days_schedule['dinner_closed'], "%H:%M").time()
 
         """print(breakfast_open)
         print(breakfast_closed)
@@ -62,15 +73,15 @@ def update_operation(weekly_schedule, kitchen):
         print(dinner_closed)
         print(east_coast_time)"""
 
-        if(breakfast_open <= east_coast_time <= breakfast_closed):
+        if(breakfast_accounted_for and (breakfast_open <= east_coast_time <= breakfast_closed)):
             #print("Breakfast!")
             operation = 'Breakfast'
         
-        elif(lunch_open <= east_coast_time <= lunch_closed):
+        elif(lunch_acounted_for and (lunch_open <= east_coast_time <= lunch_closed)):
             #print("Lunch!")
             operation = 'Lunch'
 
-        elif(dinner_open <= east_coast_time <= dinner_closed):
+        elif(dinner_accounted_for and (dinner_open <= east_coast_time <= dinner_closed)):
             #print("Dinenr")
             operation = 'Dinner'
     

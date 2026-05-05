@@ -15,6 +15,9 @@
                         </div>
                 </summary>
                 <div class="dropdown-content">
+                    <a href="{{url_for('admin.update_kitchen_logistics', id=kitchen.info.id)}}">
+                        <button>Edit</button>
+                    </a>
                     <p style="display: flex; align-items: center;">{{lucide("info", size=20, style="margin-right: 5px;")}} Current Operations: {{kitchen.operation}}</p>
                     {%if kitchen.schedule %}
                         <p style="display: flex; align-items: center;">{{lucide('calendar-fold', size=20, style="margin-right: 5px;")}} {{kitchen.schedule.name}}</p>
