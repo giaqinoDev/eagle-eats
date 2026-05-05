@@ -50,21 +50,23 @@ def kitchens():
 def update_kitchen_logistics(id):
     data_base = get_db()
 
-    active_schedule_id = data_base.execute(
+    active_schedule = data_base.execute(
         'select schedule_id from kitchen where id=?',
         (id,)
     ).fetchone()
+    active_schedule_id = active_schedule['schedule_id']
 
-    if active_schedule_id['schedule_id'] is not None:
-        active_schedule = data_base.execute(
+    if active_schedule_id is not None and active_schedule_id != '':
+        print("Active schedule ID AHNWHDUBNWDHBUWDBUWNDU: " + str(active_schedule_id))
+        active_schedule_info = data_base.execute(
             'select * from schedule where id=?',
-            (active_schedule_id['schedule_id'], )
+            (active_schedule_id, )
         ).fetchone()
-        active_schedule_name = active_schedule['name']
+        active_schedule_name = active_schedule_info['name']
 
         schedules_list = data_base.execute(
             'select * from schedule where id!=?',
-            (active_schedule_id['schedule_id'],)
+            (active_schedule_id,)
         ).fetchall()
     else:
         active_schedule_name = None
@@ -74,17 +76,21 @@ def update_kitchen_logistics(id):
 
     if request.method == 'POST':
         schedule_selected = request.form['schedule_dropdown']
+        if schedule_selected == '':
+            schedule_selected = None
         #Future Menu drop down
         #menu_selected = request.form['menu_dropdown]
 
-        if schedule_selected != active_schedule['id']:
+        if schedule_selected != active_schedule_id:
+            print("UPDATE THE ACTIVE SCHEDULE!")
             data_base.execute(
                 'update kitchen set schedule_id=? where id=?',
                 (schedule_selected, id)
             )
-        return redirect(url_for('admin.dashboard'))
+            data_base.commit()
+        return redirect(url_for('admin.kitchens'))
     
-    return render_template('dashboard/kitchen_info_updating.html', schedules=schedules_list , active_schedule_name=active_schedule_name)
+    return render_template('dashboard/kitchen_info_updating.html', schedules=schedules_list , active_schedule_name=active_schedule_name, active_schedule_id=active_schedule_id)
 @blue_print.route('dashboard/schedules', methods=('GET', 'POST'))
 @login_required
 def schedules():
@@ -97,11 +103,12 @@ def schedules():
         for schedule in schedules:
             dependents_name_list = ''
             kitchen_dependents = data_base.execute(
-                'select username from account join kitchen on account.id = kitchen.account_id join schedule on kitchen.schedule_id = ?',
+                'select username from account join kitchen on account.id = kitchen.account_id where kitchen.schedule_id = ?',
                 (schedule['id'],)
             ).fetchall()
             for dependent in kitchen_dependents:
-                dependents_name_list = str(dependent['username']) + ","
+                print('wdhwduhd')
+                dependents_name_list += str(dependent['username']) + ", "
             weekly_schedule = get_organized_schedule_info(schedule['id'])
             schedule_info_list.append(schedule_info(schedule['id'], schedule['name'], dependents_name_list, weekly_schedule))
 

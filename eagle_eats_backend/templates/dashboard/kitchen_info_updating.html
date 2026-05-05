@@ -4,11 +4,17 @@
 </header>
 <body>
     <h1>Kitchen Info:</h1>
-    <label for="schedule-selection">Kitchen Schedule:</label>
-    <select name="schedule-selection">
-        <option value="">{{active_schedule_name}}</option>
-        {%for schedule in schedules%}
-            <option value="{{schedule['id']}}">{{schedule['name']}}</option>
-        {%endfor%}
-    </select>
+    <form method="post">
+        <label for="schedule_dropdown">Kitchen Schedule:</label>
+        <select name="schedule_dropdown">
+            <option value="{{active_schedule_id}}">{{active_schedule_name}}</option>
+            {%for schedule in schedules%}
+                <option value="{{schedule['id']}}">{{schedule['name']}}</option>
+            {%endfor%}
+            {%if active_schedule_name is not none%}
+                <option value="">None</option>
+            {%endif%}
+        </select>
+        <input type="submit" value="Update">
+    </form>
 </body>
