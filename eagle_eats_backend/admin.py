@@ -48,9 +48,43 @@ def kitchens():
 @blue_print.route('dashboard/kitchens/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update_kitchen_logistics(id):
+    data_base = get_db()
+
+    active_schedule_id = data_base.execute(
+        'select schedule_id from kitchen where id=?',
+        (id,)
+    ).fetchone()
+
+    if active_schedule_id['schedule_id'] is not None:
+        active_schedule = data_base.execute(
+            'select * from schedule where id=?',
+            (active_schedule_id['schedule_id'], )
+        ).fetchone()
+        active_schedule_name = active_schedule['name']
+
+        schedules_list = data_base.execute(
+            'select * from schedule where id!=?',
+            (active_schedule_id['schedule_id'],)
+        ).fetchall()
+    else:
+        active_schedule_name = None
+        schedules_list = data_base.execute(
+            'select * from schedule'
+        ).fetchall()
+
     if request.method == 'POST':
         schedule_selected = request.form['schedule_dropdown']
-    return None
+        #Future Menu drop down
+        #menu_selected = request.form['menu_dropdown]
+
+        if schedule_selected != active_schedule['id']:
+            data_base.execute(
+                'update kitchen set schedule_id=? where id=?',
+                (schedule_selected, id)
+            )
+        return redirect(url_for('admin.dashboard'))
+    
+    return render_template('dashboard/kitchen_info_updating.html', schedules=schedules_list , active_schedule_name=active_schedule_name)
 @blue_print.route('dashboard/schedules', methods=('GET', 'POST'))
 @login_required
 def schedules():
