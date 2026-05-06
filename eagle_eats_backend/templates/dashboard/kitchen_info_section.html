@@ -19,6 +19,12 @@
                         <button>Edit</button>
                     </a>
                     <p style="display: flex; align-items: center;">{{lucide("info", size=20, style="margin-right: 5px;")}} Current Operations: {{kitchen.operation}}</p>
+                    {%if kitchen.menu_name is not none %}
+                        <p style="display: flex; align-items: center;">{{lucide('square-menu', size=20, style="margin-right: 5px;")}} {{kitchen.menu_name}}</p>
+                    {%else%}
+                        <p style="display: flex; align-items: center;">{{lucide('square-menu', size=20, style="margin-right: 5px;")}}No menu assigned</p>
+                    {%endif%}
+
                     {%if kitchen.schedule %}
                         <p style="display: flex; align-items: center;">{{lucide('calendar-fold', size=20, style="margin-right: 5px;")}} {{kitchen.schedule.name}}</p>
                         <div style="overflow-x: scroll;">
@@ -26,9 +32,9 @@
                             {%include "schedule_grid/schedule_static.html"%}
                         </div>
                     {%else%}
-                        <p style="display: flex; align-items: center;">{{lucide('calendar-fold', size=20, style="margin-right: 5px;")}}No schedule available</p>
+                        <p style="display: flex; align-items: center;">{{lucide('calendar-fold', size=20, style="margin-right: 5px;")}}No schedule assigned</p>
                     {%endif%}
-                </div>
+                    </div>
 
             </details>
     {%endfor%}

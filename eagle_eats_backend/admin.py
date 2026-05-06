@@ -10,11 +10,11 @@ from datetime import datetime
 
 blue_print = Blueprint('admin', __name__, url_prefix="/admin")
 class kitchen_info:
-    def __init__(self, operation, info, schedule, menu):
+    def __init__(self, operation, info, schedule, menu_name):
         self.operation = operation
         self.info = info
         self.schedule =schedule
-        self.menu = menu
+        self.menu_name = menu_name
 
 class schedule_info:
     def __init__(self, id, name, dependents, schedule):
@@ -45,12 +45,25 @@ def kitchens():
         kitchen_info_list = []
         for kitchen in kitchens:
             schedule_id = kitchen['schedule_id']
+            menu_id = kitchen['menu_id']
+            if(menu_id is None):
+                menu_name = None
+            else:
+                menu = database_ref.execute(
+                    'select name from menu where id=?',
+                    (menu_id,)
+                ).fetchone()
+                menu_name = menu['name']
+                print(menu_name)
+
             if schedule_id is None:
-                kitchen_info_list.append(kitchen_info("Closed", kitchen, None, None))
+                weekly_schedule = None
+                operation = 'Closed'
+                #kitchen_info_list.append(kitchen_info("Closed", kitchen, None, None))
             else:
                 weekly_schedule = get_organized_schedule_info(schedule_id)
                 operation = kitchen["operation"]
-                kitchen_info_list.append(kitchen_info(operation, kitchen, weekly_schedule, None))
+            kitchen_info_list.append(kitchen_info(operation, kitchen, weekly_schedule, menu_name))
 
     return render_template('dashboard/admin_dashboard.html', kitchens=kitchen_info_list)
 
