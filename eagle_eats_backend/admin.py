@@ -23,6 +23,14 @@ class schedule_info:
         self.dependents = dependents
         self.schedule = schedule
 
+class menu_info:
+    def __init__(self, id, name, breakfast_items, lunch_items, dinner_items):
+        self.id = id
+        self.name = name
+        self.breakfast_items = breakfast_items
+        self.lunch_items = lunch_items
+        self.dinner_items = dinner_items
+
 #-----------------Kitchen Stuff----------------------------------------------------------------------------------------------------
 @blue_print.route('dashboard/kitchens', methods = ('GET', 'POST'))
 @login_required
@@ -57,6 +65,12 @@ def update_kitchen_logistics(id):
     ).fetchone()
     active_schedule_id = active_schedule['schedule_id']
 
+    active_menu = data_base.execute(
+        'select menu_id from kitchen where id=?',
+        (id,)
+    ).fetchone()
+    active_menu_id = active_menu['menu_id']
+
     if active_schedule_id is not None and active_schedule_id != '':
         print("Active schedule ID AHNWHDUBNWDHBUWDBUWNDU: " + str(active_schedule_id))
         active_schedule_info = data_base.execute(
@@ -75,10 +89,30 @@ def update_kitchen_logistics(id):
             'select * from schedule'
         ).fetchall()
 
+    if active_menu_id is not None and active_menu_id != '':
+        active_menu_info = data_base.execute(
+            'select * from menu where id=?',
+            (active_menu_id, )
+        ).fetchone()
+        active_menu_name = active_menu_info['name']
+
+        menus_list = data_base.execute(
+            'select * from menu where id !=?',
+            (active_menu_id,)
+        ).fetchall()
+    else:
+        active_menu_name = None
+        menus_list = data_base.execute(
+            'select * from menu'
+        ).fetchall()
+
     if request.method == 'POST':
         schedule_selected = request.form['schedule_dropdown']
+        menu_selected = request.form['menu_dropdown']
         if schedule_selected == '':
             schedule_selected = None
+        if menu_selected == '':
+            menu_selected == None
         #Future Menu drop down
         #menu_selected = request.form['menu_dropdown]
 
@@ -89,9 +123,23 @@ def update_kitchen_logistics(id):
                 (schedule_selected, id)
             )
             data_base.commit()
+        if menu_selected != active_menu_id:
+            print('UPDATE KITCHENS MENU!')
+            data_base.execute(
+                'update kitchen set menu_id=? where id=?',
+                (menu_selected, id)
+            )
+            data_base.commit()
         return redirect(url_for('admin.kitchens'))
     
-    return render_template('dashboard/kitchen_info_updating.html', schedules=schedules_list , active_schedule_name=active_schedule_name, active_schedule_id=active_schedule_id)
+    return render_template('dashboard/kitchen_info_updating.html', 
+                           schedules=schedules_list , 
+                           active_schedule_name=active_schedule_name, 
+                           active_schedule_id=active_schedule_id,
+                           menus = menus_list,
+                           active_menu_name = active_menu_name,
+                           active_menu_id = active_menu_id
+                           )
 
 #-----------------Schedule Stuff---------------------------------------------------------------------------------------------------
 @blue_print.route('dashboard/schedules', methods=('GET', 'POST'))
@@ -390,19 +438,58 @@ def query_schedule_update(schedule_id, input_name, schedule_input, original_sche
     data_base.commit()
     
 @blue_print.route('/cancel', methods = ('POST', ))
+@login_required
 def cancel_schedule_creation():
     if request.method == 'POST':
         return redirect(url_for('admin.schedules'))
 
 @blue_print.route('/cancel/kitchen_update', methods = ('POST', ))
+@login_required
 def cancel_kitchen_info_update():
     if request.method == 'POST':
         return redirect(url_for('admin.kitchens'))
+
+#-----------Menu Stuff----------------------------------------------------------------------------------------
+@blue_print.route('dashboard/menus', methods = ('GET', 'POST'))
+@login_required
+def menus():
+    data_base = get_db()
+    if request.method == 'GET':
+        menus = data_base.execute(
+            'select * from menu'
+        ).fetchall()
+
+        menus_list = []
+        for menu in menus:
+            menu_name = menu['name']
+            menu_id = menu['id']
+            menu_items = data_base.execute(
+                'select * from item where menu_id=?',
+                (menu_id,)
+            ).fetchall()
+            breakfast_items = []
+            lunch_items = []
+            dinner_items = []
+            for item in menu_items:
+                if(item['availability'] == 'Breakfast'):
+                    breakfast_items.append(item)
+                elif(item['availability'] == 'Lunch'):
+                    lunch_items.append(item)
+                elif(item['availability'] == 'Dinner'):
+                    dinner_items.append(item)
+            print(len(breakfast_items))
+            info = menu_info(menu_id, menu_name, breakfast_items, lunch_items, dinner_items)
+            menus_list.append(info)
+    return render_template('dashboard/admin_dashboard.html', menus_info = menus_list)
+
+@blue_print.route('dashboard/menus/create', methods = ('GET', 'POST'))
+def create_menu():
+    return None
+
+
 #--------------------Helper functions--------------------------------------------------------------------------
 def parse_time(value):
     if value == "":
         print("EMPTY!!")
         return None
     return datetime.strptime(value, "%H:%M").time()
-
-

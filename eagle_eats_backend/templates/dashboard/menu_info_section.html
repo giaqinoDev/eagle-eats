@@ -1,0 +1,51 @@
+<div class="page-header">
+    <h2>Menus {{lucide("square-menu")}}</h2>
+    <a href="{{ url_for('admin.create_menu') }}" class="header-buttons">
+        <button>{{lucide("plus")}}</button>
+    </a>
+</div>
+{%for menu in menus_info%}
+        <details class="info-dropdown">
+            <summary class="info-dropdown-summary">
+                    <div class="summary-header">
+                        {{lucide('chevron-right', size=20)}}
+                        {{menu.name}}
+                    </div>
+            </summary>
+            <div class="dropdown-content">
+                <p>{{lucide("egg-fried", size=20, class="meal-icon")}} Breakfast Items</p>
+                {%if menu.breakfast_items | length > 0 %}
+                    <div>
+                        {%for item in menu.breakfast_items%}
+                            <p>{{item.name}} {{item.price}}</p>
+                        {%endfor%}
+                    </div>
+                {%else%}
+                    <p style="display: flex; align-items: center;">Empty</p>
+                {%endif%}
+
+                <p>{{lucide("sandwich", size=20, class="meal-icon")}} Lunch Items</p>
+                {%if menu.lunch_items | length > 0 %}
+                    <div>
+                        {%for item in menu.lunch_items%}
+                            <p>{{item.name}} {{item.price}}</p>
+                        {%endfor%}
+                    </div>
+                {%else%}
+                    <p style="display: flex; align-items: center;">Empty</p>
+                {%endif%}
+
+                <p>{{lucide("utensils", size=20, class="meal-icon")}} Dinner Items</p>
+                {%if menu.dinner_items | length > 0 %}
+                    <div>
+                        {%for item in menu.dinner_items%}
+                            <p>{{item.name}} {{item.price}}</p>
+                        {%endfor%}
+                    </div>
+                {%else%}
+                    <p style="display: flex; align-items: center;">Empty</p>
+                {%endif%}
+            </div>
+
+        </details>
+{%endfor%}

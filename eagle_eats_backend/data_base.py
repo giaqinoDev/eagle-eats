@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import datetime
 from .admin_init.create_admin import ensure_admin
-from .admin_init.create_admin import ensure_base_kitchens, ensure_base_schedules
+from .admin_init.create_admin import ensure_base_kitchens, ensure_base_schedules, ensure_base_menu
 import click
 from flask import current_app, g
 
@@ -29,6 +29,7 @@ def init_db():
     ensure_admin(data_base)
     ensure_base_schedules(data_base)
     ensure_base_kitchens(data_base)
+    ensure_base_menu(data_base)
 
 @click.command('init_db')
 def init_db_command():

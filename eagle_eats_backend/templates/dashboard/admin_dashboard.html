@@ -24,12 +24,18 @@
                 <form action="{{url_for('admin.schedules')}}" method="get">
                     <button type="submit">Schedules</button>
                 </form>
+
+                <form action="{{url_for('admin.menus')}}" method="get">
+                    <button type="submit">Menus</button>
+                </form>
             </div>
             <div class="info-section">
                 {%if request.path == '/admin/dashboard/kitchens'%}
                     {%include "dashboard/kitchen_info_section.html"%}
                 {%elif request.path == '/admin/dashboard/schedules'%}
                     {%include "dashboard/schedules_info_section.html"%}
+                {%elif request.path == '/admin/dashboard/menus'%}
+                    {%include "dashboard/menu_info_section.html"%}
                 {%endif%}
             </div>
             

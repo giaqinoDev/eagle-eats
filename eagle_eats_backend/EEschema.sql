@@ -73,15 +73,23 @@ create table menu(
     name text not null
 );
 create table item(
-    id integer,
-    image_path text,
-    name text not null,
-    price decimal(5,2) not null
-);
-create table menu_item(
+    id integer primary key autoincrement,
     menu_id integer,
-    item_id integer,
-    primary key (menu_id, item_id),
-    foreign key (menu_id) references menu(id) on delete cascade,
-    foreign key (item_id) references item(id) on delete cascade
+    availability text not null check(availability in ('Breakfast', 'Lunch', 'Dinner')),
+    name text not null,
+    price decimal(5,2) not null,
+    foreign key (menu_id) references menu(id) on delete cascade
 );
+--create table item_availability(
+    --availability text not null check(availability in ('Breakfast', 'Lunch', 'Dinner')),
+    --item_id integer not null,
+    --primary key (availability, item_id),
+    --foreign key (item_id) references item(id)
+--);
+--create table menu_item(
+    --menu_id integer,
+    --item_id integer,
+    --primary key (menu_id, item_id),
+    --foreign key (menu_id) references menu(id) on delete cascade,
+    --foreign key (item_id) references item(id) on delete cascade
+--);
