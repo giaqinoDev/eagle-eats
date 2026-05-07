@@ -1,84 +1,102 @@
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
     margin: 0;
+}
+
+/* MAIN LAYOUT */
+.layout {
+    display: flex;
+    gap: 20px;
     padding: 20px;
 }
 
+/* LEFT SIDE */
+.main {
+    flex: 3;
+}
+
+/* HEADER */
 .header {
     margin-bottom: 20px;
 }
 
-/* Kitchen container */
+/* KITCHEN CARD */
 .kitchen-card {
     background: white;
+    padding: 15px;
     border-radius: 10px;
-    padding: 16px;
     margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.06); 
 }
 
 .kitchen-title {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
-    margin-bottom: 4px;
 }
 
-.kitchen-meta {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 12px;
+.kitchen-operation {
+    margin-bottom: 10px;
 }
 
-/* Horizontal scroll menu */
+/* HORIZONTAL MENU */
 .menu-scroll {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     overflow-x: auto;
     padding-bottom: 10px;
-    scroll-behavior: smooth;
 }
 
-/* scrollbar styling */
-.menu-scroll::-webkit-scrollbar {
-    height: 6px;
-}
-
-.menu-scroll::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 10px;
-}
-
-/* menu item card */
 .menu-item {
-    min-width: 160px;
+    min-width: 170px;
     flex: 0 0 auto;
     background: #fafafa;
-    border-radius: 10px;
-    padding: 12px;
     border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 10px;
 }
 
 .menu-item-name {
     font-weight: bold;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
 }
 
 .menu-item-price {
-    color: #444;
     font-size: 14px;
 }
 
-.empty {
-    color: #888;
-    font-style: italic;
-    font-size: 13px;
+/* add and remove button styles */
+.cart-buttons {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
 }
 
-.badge {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    background: #eee;
+.error-message{
+    color: red;
+}
+.cart {
+    flex: 1;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.06); 
+}
+
+.cart-item {
+    padding: 6px 0;
+    font-size: 14px;
+}
+
+
+.checkout-btn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    background: #98002E;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
 }

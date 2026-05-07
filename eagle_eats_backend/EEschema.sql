@@ -93,3 +93,42 @@ create table item(
     --foreign key (menu_id) references menu(id) on delete cascade,
     --foreign key (item_id) references item(id) on delete cascade
 --);
+
+create table orders(
+    id integer primary key autoincrement,
+    user_id integer not null,
+    kitchen_id integer not null,
+    status text not null check(status in ('pending', 'accepted', 'preparing', 'ready', 'completed', 'cancelled')),
+    total_price decimal(10,2) not null,
+    created_at timestamp default current_timestamp,
+
+    foreign key (user_id) references user(account_id) on delete cascade,
+    foreign key (kitchen_id) references kitchen(id) on delete cascade
+);
+
+create table order_item(
+    id integer primary key autoincrement,
+    order_id integer not null,
+    item_id integer not null,
+    quantity integer not null check(quantity > 0),
+
+    -- snapshot fields (important so price doesn't change later)
+    item_name text not null,
+    item_price decimal(5,2) not null,
+
+    delivery_location text not null check(delivery_location in (
+        'stokes',
+        'mcguinn',
+        'campion',
+        'merkert',
+        'higgins',
+        'gasson',
+        '245 beacon',
+        'lyons',
+        'fulton',
+        'devlin',
+        'oneill library'
+    )),
+    foreign key (order_id) references orders(id) on delete cascade,
+    foreign key (item_id) references item(id)
+);

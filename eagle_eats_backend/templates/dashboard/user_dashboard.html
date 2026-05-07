@@ -7,49 +7,125 @@
 
 <body>
 
-<div class="header">
-    <h2>Welcome, {{ user_name }}</h2>
-    <p>Open Kitchens</p>
-</div>
+<div class="layout">
 
-{% for kitchen in open_kitchens_offerings %}
-
-    <div class="kitchen-card">
-
-        <!-- Kitchen Header -->
-        <div class="kitchen-title">
-            {{ kitchen.location }}
+    <!-- kitchens -->
+    <div class="main">
+        {% for message in get_flashed_messages() %}
+            <div class="error-message">{{ message }}</div>
+        {% endfor %}
+        <div class="header">
+            <h2>Welcome, {{ user_name }}</h2>
+            <p>Open Kitchens</p>
         </div>
 
-        <div class="kitchen-meta">
-            Operation:
-            <span class="badge">{{ kitchen.operation }}</span>
-        </div>
+        {% for kitchen in open_kitchens_offerings %}
+            <div class="kitchen-card">
 
-        <!-- Horizontal scroll menu -->
-        <div class="menu-scroll">
+                <div class="kitchen-title">
+                    {{ kitchen.location }}
+                </div>
 
-            {% if kitchen.menu_id is none or kitchen.menu_id|length == 0 %}
-                <div class="empty">No menu items available</div>
-            {% else %}
+                <div class="kitchen-operation">
+                    Operation:
+                    <span>{{ kitchen.operation }}</span>
+                </div>
 
-                {% for item in kitchen.menu_id %}
-                    <div class="menu-item">
-                        <div class="menu-item-name">{{ item['name'] }}</div>
-                        <div class="menu-item-price">${{ item['price'] }}</div>
-                    </div>
-                {% endfor %}
+                <div class="menu-scroll">
 
-            {% endif %}
+                    {% if kitchen.menu_id is none or kitchen.menu_id|length == 0 %}
+                        <div class="empty">No menu items available</div>
+                    {% else %}
 
-        </div>
+                        {% for item in kitchen.menu_id %}
+                        <div class="menu-item">
+
+                            <div class="menu-item-name">{{ item['name'] }}</div>
+                            <div class="menu-item-price">${{ item['price'] }}</div>
+
+                            <!-- CART BUTTONS -->
+                            <div class="cart-buttons">
+
+                                <form method="POST" action="{{ url_for('user.add_to_cart', item_id=item['id'], kitchen_id=kitchen.id) }}">
+                                    <button type="submit">+</button>
+                                </form>
+
+                                <form method="POST" action="{{ url_for('user.remove_from_cart', item_id=item['id'], kitchen_id=kitchen.id) }}">
+                                    <button type="submit">-</button>
+                                </form>
+
+                            </div>
+
+                        </div>
+                        {% endfor %}
+
+                    {% endif %}
+
+                </div>
+            </div>
+
+        {% endfor %}
+
+        <form action="{{ url_for('auth.logout') }}" method="post">
+            <button type="submit">Logout</button>
+        </form>
 
     </div>
 
-{% endfor %}
-    <form action="{{url_for('auth.logout')}}" method="post">
-        <button type="submit">Logout</button>
-    </form>
+    <!-- item cart -->
+    <div class="cart">
+
+        <h3>Your Cart</h3>
+
+        {% if cart is not defined or cart|length == 0 %}
+            <p>Cart is empty</p>
+        {% else %}
+
+            {% for item_id, item in cart.items() %}
+                <div class="cart-item">
+                    {{ item['name'] }} × {{ item['quantity'] }}
+                </div>
+            {% endfor %}
+
+        {% endif %}
+
+        <h4>Delivery Location</h4>
+
+        <form method="POST" action="{{ url_for('user.set_delivery_location') }}">
+
+            <select name="delivery_location" onchange="this.form.submit()">
+
+                <option value="" disabled selected>
+                    Select location
+                </option>
+
+                <option value="stokes">Stokes Hall</option>
+                <option value="mcguinn">McGuinn</option>
+                <option value="campion">Campion</option>
+                <option value="merkert">Merkert</option>
+                <option value="higgins">Higgins</option>
+                <option value="gasson">Gasson Hall</option>
+                <option value="245 beacon">245 Beacon</option>
+                <option value="lyons">Lyons Hall</option>
+                <option value="fulton">Fulton Hall</option>
+                <option value="devlin">Devlin Hall</option>
+                <option value="oneill library">O'Neill Library</option>
+
+            </select>
+
+        </form>
+
+        {% if session.get('delivery_location') %}
+            <p>Selected: <strong>{{ session['delivery_location'] }}</strong></p>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('user.checkout') }}">
+            <button class="checkout-btn" type="submit">Checkout</button>
+        </form>
+
+    </div>
+
+</div>
 
 </body>
 </html>

@@ -20,7 +20,9 @@ def dashboard():
     update_kitchen_statuses()
     data_base = get_db()
     open_kitchens_offerings = []
+
     if request.method == 'GET':
+        cart = session.get('cart', {})
         user_info = get_logged_in_user(session['account_id'])
         print(user_info['username'])
         #Get open kitchens
@@ -29,20 +31,19 @@ def dashboard():
             ('Closed',)
         ).fetchall()
 
-        if open_kitchens:
-            for kitchen in open_kitchens:
-                kitchen_menu_id = kitchen['menu_id']
-                if kitchen_menu_id is None:
-                    open_kitchens_offerings.append(curr_open_kitchens(kitchen['id'], kitchen['location'], kitchen['operation'], None))
-                    continue
-                else:
-                    menu_items = data_base.execute(
-                        'select id, name, price from item where menu_id=? and availability=?',
-                        (kitchen_menu_id, kitchen['operation'])
-                    ).fetchall()
-                    open_kitchens_offerings.append(curr_open_kitchens(kitchen['id'], kitchen['location'], kitchen['operation'], menu_items))
+        for kitchen in open_kitchens:
+            kitchen_menu_id = kitchen['menu_id']
+            if kitchen_menu_id is None:
+                open_kitchens_offerings.append(curr_open_kitchens(kitchen['id'], kitchen['location'], kitchen['operation'], None))
+                continue
+            else:
+                menu_items = data_base.execute(
+                    'select id, name, price from item where menu_id=? and availability=?',
+                    (kitchen_menu_id, kitchen['operation'])
+                ).fetchall()
+                open_kitchens_offerings.append(curr_open_kitchens(kitchen['id'], kitchen['location'], kitchen['operation'], menu_items))
     #Get open kitchens
-    return render_template('dashboard/user_dashboard.html', user_name=user_info['username'], open_kitchens_offerings = open_kitchens_offerings)
+    return render_template('dashboard/user_dashboard.html', cart=cart, user_name=user_info['username'], open_kitchens_offerings = open_kitchens_offerings)
 
 def get_logged_in_user(user_id):
     data_base = get_db()
@@ -51,3 +52,135 @@ def get_logged_in_user(user_id):
         (user_id,)
     ).fetchone()
     return user_info
+
+
+#------------------------Cart/Order System-----------------------------------------------------------
+@blue_print.route('/cart/add/<int:kitchen_id>/<int:item_id>', methods = ('GET', 'POST'))
+@login_required
+def add_to_cart(kitchen_id, item_id):
+    db = get_db()
+
+    item = db.execute(
+        'SELECT id, name, price FROM item WHERE id = ?',
+        (item_id,)
+    ).fetchone()
+
+    if item is None:
+        return redirect(url_for('user.dashboard'))
+
+    cart = session.get('cart', {})
+    existing_kitchen_ids = {
+        item['kitchen_id']
+        for item in cart.values()
+    }
+
+    if kitchen_id not in existing_kitchen_ids and len(existing_kitchen_ids) > 0:
+        flash("Can only order from the same kitchen")
+    else:
+        item_id = str(item_id)
+        cart_key = f"{kitchen_id}:{item_id}"
+
+        # increment quantity
+        if cart_key in cart:
+            cart[cart_key]['quantity'] += 1
+        else:
+            cart[cart_key] = {
+                "kitchen_id": kitchen_id,
+                "item_id": item_id,
+                "name": item['name'],
+                "price": float(item['price']),
+                "quantity": 1
+            }
+
+    #update session with mutated cart
+    session['cart'] = cart
+
+    return redirect(url_for('user.dashboard'))
+
+@blue_print.route('/cart/remove/<int:kitchen_id>/<int:item_id>', methods=('GET', 'POST'))
+@login_required
+def remove_from_cart(kitchen_id, item_id):
+    cart = session.get('cart', {})
+    item_id = str(item_id)
+    cart_key = f"{kitchen_id}:{item_id}"
+
+    if cart_key in cart:
+        cart[cart_key]['quantity'] -= 1
+        if cart[cart_key]['quantity'] <= 0:
+            del cart[cart_key]
+
+    session['cart'] = cart
+
+    return redirect(url_for('user.dashboard'))
+
+@blue_print.route('/cart/set-location', methods=['POST'])
+@login_required
+def set_delivery_location():
+    location = request.form.get('delivery_location')
+
+    if location:
+        session['delivery_location'] = location
+
+    return redirect(url_for('user.dashboard'))
+
+@blue_print.route('/cart/checkout', methods=('GET', 'POST'))
+@login_required
+def checkout():
+    db = get_db()
+    cart = session.get('cart', {})
+    delivery_location = session.get('delivery_location')
+
+    if not delivery_location:
+        return "Please select a delivery location", 400
+
+    if not cart:
+        return "Cart is empty", 400
+
+    user_id = session['user_id']
+
+    total_price = 0
+    kitchen_id = None
+
+    # create order placeholder first
+    order_cursor = db.execute(
+        'insert into orders (user_id, kitchen_id, status, total_price) values (?, ?, ?, ?)',
+        (user_id, 0, 'pending', 0)
+    )
+
+    order_id = order_cursor.lastrowid
+
+    for item_id, quantity in cart.items():
+        item = db.execute(
+            'select id, name, price, menu_id from item where id=?',
+            (item_id,)
+        ).fetchone()
+
+        if not item:
+            continue
+
+        # optional: ensure all items come from same kitchen/menu
+        if kitchen_id is None:
+            kitchen_id = item['menu_id']
+
+        item_total = item['price'] * quantity
+        total_price += item_total
+
+        db.execute(
+            '''
+            insert into orders (user_id, kitchen_id, status, total_price, delivery_location)
+            values (?, ?, ?, ?, ?)
+            ''',
+            (user_id, kitchen_id, 'pending', total_price, delivery_location)
+        )
+
+    # update order with correct totals + kitchen
+    db.execute(
+        'update orders set total_price=?, kitchen_id=? where id=?',
+        (total_price, kitchen_id, order_id)
+    )
+
+    db.commit()
+
+    session['cart'] = {}
+
+    return redirect(url_for('user.dashboard'))
