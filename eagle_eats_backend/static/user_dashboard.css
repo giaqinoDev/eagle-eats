@@ -1,0 +1,84 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+.header {
+    margin-bottom: 20px;
+}
+
+/* Kitchen container */
+.kitchen-card {
+    background: white;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.kitchen-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.kitchen-meta {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+/* Horizontal scroll menu */
+.menu-scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scroll-behavior: smooth;
+}
+
+/* scrollbar styling */
+.menu-scroll::-webkit-scrollbar {
+    height: 6px;
+}
+
+.menu-scroll::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+/* menu item card */
+.menu-item {
+    min-width: 160px;
+    flex: 0 0 auto;
+    background: #fafafa;
+    border-radius: 10px;
+    padding: 12px;
+    border: 1px solid #eee;
+}
+
+.menu-item-name {
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.menu-item-price {
+    color: #444;
+    font-size: 14px;
+}
+
+.empty {
+    color: #888;
+    font-style: italic;
+    font-size: 13px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    background: #eee;
+}

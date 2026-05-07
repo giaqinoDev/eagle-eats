@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='user_dashboard.css') }}">
+</head>
+
+<body>
+
+<div class="header">
+    <h2>Welcome, {{ user_name }}</h2>
+    <p>Open Kitchens</p>
+</div>
+
+{% for kitchen in open_kitchens_offerings %}
+
+    <div class="kitchen-card">
+
+        <!-- Kitchen Header -->
+        <div class="kitchen-title">
+            {{ kitchen.location }}
+        </div>
+
+        <div class="kitchen-meta">
+            Operation:
+            <span class="badge">{{ kitchen.operation }}</span>
+        </div>
+
+        <!-- Horizontal scroll menu -->
+        <div class="menu-scroll">
+
+            {% if kitchen.menu_id is none or kitchen.menu_id|length == 0 %}
+                <div class="empty">No menu items available</div>
+            {% else %}
+
+                {% for item in kitchen.menu_id %}
+                    <div class="menu-item">
+                        <div class="menu-item-name">{{ item['name'] }}</div>
+                        <div class="menu-item-price">${{ item['price'] }}</div>
+                    </div>
+                {% endfor %}
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+{% endfor %}
+    <form action="{{url_for('auth.logout')}}" method="post">
+        <button type="submit">Logout</button>
+    </form>
+
+</body>
+</html>
