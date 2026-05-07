@@ -92,7 +92,7 @@ def register_driver():
                     #Save new registrated user to session, also just in case clear session
                     session.clear()
                     session['account_id'] = account_id
-                    session['role'] = 'user'
+                    session['role'] = 'driver'
                     return redirect(url_for('driver.dashboard'))
             except database_ref.IntegrityError:
                 if error is None:
@@ -166,6 +166,29 @@ def logout():
 #Tells flask to run this function before every request throughout the entire app
 @blue_print.before_app_request
 def load_logged_in_user():
+
+    user_id = session.get('account_id')
+
+    if user_id is None:
+        g.user = None
+        return
+
+    db = get_db()
+
+    user = db.execute(
+        'select id, username, role from account where id = ?',
+        (user_id,)
+    ).fetchone()
+
+    if user is None:
+        session.clear()
+        g.user = None
+        return
+
+    g.user = user
+
+"""@blue_print.before_app_request
+def load_logged_in_user():
     id = session.get('account_id')
     role = session.get('role')
     if id is None:
@@ -180,7 +203,17 @@ def load_logged_in_user():
             g.user = get_db().execute(
                 f'select * from account join {role} on account.id = {role}.account_id'
             ).fetchone()
-            redirect(url_for(f'{role}.dashboard'))
+            redirect(url_for(f'{role}.dashboard'))"""
+
+"""def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+            
+        return view(**kwargs)
+
+    return wrapped_view"""
 
 def login_required(view):
     @functools.wraps(view)

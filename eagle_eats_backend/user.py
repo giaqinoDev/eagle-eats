@@ -123,64 +123,84 @@ def set_delivery_location():
 
     return redirect(url_for('user.dashboard'))
 
-@blue_print.route('/cart/checkout', methods=('GET', 'POST'))
+@blue_print.route('/cart/checkout', methods=('POST',))
 @login_required
 def checkout():
+
     db = get_db()
+
     cart = session.get('cart', {})
     delivery_location = session.get('delivery_location')
 
-    if not delivery_location:
-        return "Please select a delivery location", 400
-
+    # validation
     if not cart:
-        return "Cart is empty", 400
+        return "Cart is empty"
 
-    user_id = session['user_id']
+    if not delivery_location:
+        return "Please select a delivery location"
+
+    user_id = session['account_id']
+
+    first_cart_item = next(iter(cart.values()))
+    kitchen_id = first_cart_item['kitchen_id']
 
     total_price = 0
-    kitchen_id = None
 
-    # create order placeholder first
+    # calculate order total
+    for cart_item in cart.values():
+
+        quantity = cart_item['quantity']
+        price = cart_item['price']
+
+        total_price += quantity * price
+
+    # create ONE order
     order_cursor = db.execute(
-        'insert into orders (user_id, kitchen_id, status, total_price) values (?, ?, ?, ?)',
-        (user_id, 0, 'pending', 0)
+        '''insert into orders
+        (
+            user_id,
+            kitchen_id,
+            status,
+            total_price,
+            delivery_location
+        )
+        values (?, ?, ?, ?, ?)''',
+        (
+            user_id,
+            kitchen_id,
+            'pending',
+            total_price,
+            delivery_location
+        )
     )
 
     order_id = order_cursor.lastrowid
 
-    for item_id, quantity in cart.items():
-        item = db.execute(
-            'select id, name, price, menu_id from item where id=?',
-            (item_id,)
-        ).fetchone()
-
-        if not item:
-            continue
-
-        # optional: ensure all items come from same kitchen/menu
-        if kitchen_id is None:
-            kitchen_id = item['menu_id']
-
-        item_total = item['price'] * quantity
-        total_price += item_total
+    # create order items
+    for cart_item in cart.values():
 
         db.execute(
-            '''
-            insert into orders (user_id, kitchen_id, status, total_price, delivery_location)
-            values (?, ?, ?, ?, ?)
-            ''',
-            (user_id, kitchen_id, 'pending', total_price, delivery_location)
+            '''insert into order_item
+            (
+                order_id,
+                item_id,
+                quantity,
+                item_name,
+                item_price
+            )
+            values(?, ?, ?, ?, ?)''',
+            (
+                order_id,
+                cart_item['item_id'],
+                cart_item['quantity'],
+                cart_item['name'],
+                cart_item['price']
+            )
         )
-
-    # update order with correct totals + kitchen
-    db.execute(
-        'update orders set total_price=?, kitchen_id=? where id=?',
-        (total_price, kitchen_id, order_id)
-    )
 
     db.commit()
 
+    # clear cart after successful checkout
     session['cart'] = {}
 
     return redirect(url_for('user.dashboard'))

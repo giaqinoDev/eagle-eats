@@ -100,3 +100,14 @@ body {
     border-radius: 8px;
     cursor: pointer;
 }
+
+.checkout-btn:disabled {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    background: #d8d0d3;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}

@@ -120,7 +120,7 @@
         {% endif %}
 
         <form method="POST" action="{{ url_for('user.checkout') }}">
-            <button class="checkout-btn" type="submit">Checkout</button>
+            <button class="checkout-btn" type="submit" {% if not session.get('cart') %}disabled{% endif %}>Checkout</button>
         </form>
 
     </div>
