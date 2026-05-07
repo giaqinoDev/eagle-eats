@@ -9,4 +9,6 @@ blue_print = Blueprint('user', __name__, url_prefix='/user')
 @blue_print.route('/dashboard', methods=('GET', 'POST'))
 @login_required
 def dashboard():
+    data_base = get_db()
+    #Get open kitchens
     return render_template('dashboard/dashboard.html', user_id = 'User')

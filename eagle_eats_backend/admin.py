@@ -46,17 +46,22 @@ def kitchens():
         for kitchen in kitchens:
             schedule_id = kitchen['schedule_id']
             menu_id = kitchen['menu_id']
-            if(menu_id is None):
+            print("SAHWHSHWSHWHD:" + str(menu_id))
+
+            if menu_id is None or menu_id == '':
                 menu_name = None
             else:
                 menu = database_ref.execute(
                     'select name from menu where id=?',
                     (menu_id,)
                 ).fetchone()
-                menu_name = menu['name']
+                if menu is not None:
+                    menu_name = menu['name']
+                else:
+                    menu_name = None
                 print(menu_name)
 
-            if schedule_id is None:
+            if schedule_id is None or schedule_id == 'None':
                 weekly_schedule = None
                 operation = 'Closed'
                 #kitchen_info_list.append(kitchen_info("Closed", kitchen, None, None))
@@ -90,7 +95,10 @@ def update_kitchen_logistics(id):
             'select * from schedule where id=?',
             (active_schedule_id, )
         ).fetchone()
-        active_schedule_name = active_schedule_info['name']
+        if active_schedule_info:
+            active_schedule_name = active_schedule_info['name']
+        else:
+            active_schedule_name = None
 
         schedules_list = data_base.execute(
             'select * from schedule where id!=?',
@@ -102,16 +110,19 @@ def update_kitchen_logistics(id):
             'select * from schedule'
         ).fetchall()
 
-    if active_menu_id is not None and active_menu_id != '':
+    if active_menu_id:
         active_menu_info = data_base.execute(
             'select * from menu where id=?',
-            (active_menu_id, )
+            (active_menu_id,)
         ).fetchone()
-        active_menu_name = active_menu_info['name']
+        if active_menu_info:
+            active_menu_name = active_menu_info['name']
+        else:
+            active_menu_name = None
 
         menus_list = data_base.execute(
-            'select * from menu where id !=?',
-            (active_menu_id,)
+            'select * from menu where id != ?',
+            (active_menu_id, )
         ).fetchall()
     else:
         active_menu_name = None
@@ -125,7 +136,7 @@ def update_kitchen_logistics(id):
         if schedule_selected == '':
             schedule_selected = None
         if menu_selected == '':
-            menu_selected == None
+            menu_selected = None
         #Future Menu drop down
         #menu_selected = request.form['menu_dropdown]
 

@@ -13,7 +13,8 @@ def update_kitchen_statuses():
     for kitchen in kitchens:
         print(kitchen['id'])
         schedule_id = kitchen['schedule_id']
-        if schedule_id is None and kitchen["operation"] != 'Closed':
+        print("Schedule ID: " + str(schedule_id))
+        if schedule_id is None or schedule_id == 'None':
             data_base.execute(
                 'update kitchen set operation = ? where id =?',
                 ('Closed', kitchen['id'])
