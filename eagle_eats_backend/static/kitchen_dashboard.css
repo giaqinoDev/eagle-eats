@@ -1,0 +1,47 @@
+.header {
+    padding: 20px;
+}
+
+.orders-container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.order-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    height: fit-content;
+    background: #ddd;
+}
+
+.items {
+    margin-top: 10px;
+}
+
+.item-row {
+    padding: 5px 0;
+}
+
+.ready-btn {
+    margin-top: 10px;
+    padding: 8px;
+    background: green;
+    color: white;
+    border: none;
+    cursor: pointer;
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kitchen Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='kitchen_dashboard.css') }}">
+</head>
+
+<body>
+
+<div class="header">
+    <h2>{{ kitchen.location }} Kitchen</h2>
+    <p>Incoming Orders</p>
+    <form action="{{ url_for('auth.logout') }}" method="post">
+        <button type="submit">Logout</button>
+    </form>
+</div>
+
+<div class="orders-container">
+
+    {% if orders|length == 0 %}
+        <p>No active orders</p>
+    {% endif %}
+
+    {% for order in orders %}
+
+    <div class="order-card">
+
+        <div class="order-header">
+            <h3>Order #{{ order.id }}</h3>
+            <span class="status {{ order.status }}">
+                {{ order.status }}
+            </span>
+        </div>
+
+        <p><b>Delivery:</b> {{ order.delivery_location }}</p>
+        <p><b>Total:</b> ${{ order.total_price }}</p>
+
+        <div class="items">
+            {% for item in order["items"] %}
+                <div class="item-row">
+                    {{ item.item_name }} × {{ item.quantity }}
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if order.status == 'pending' %}
+        <form method="POST"
+              action="{{ url_for('kitchen.mark_ready', order_id=order.id) }}">
+            <button class="ready-btn">Mark as Ready</button>
+        </form>
+        {% endif %}
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

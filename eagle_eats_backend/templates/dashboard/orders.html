@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Orders</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='orders.css') }}">
+</head>
+
+<body>
+
+<div class="page-header">
+    <h2>My Orders</h2>
+    <a href="{{ url_for('user.dashboard') }}">Home</a>
+</div>
+
+<div class="orders-container">
+
+    {% if orders|length == 0 %}
+        <p>No orders yet.</p>
+    {% endif %}
+
+    {% for order in orders %}
+
+        <div class="order-card">
+
+            <div class="order-header">
+                <h3>Order #{{ order.id }}</h3>
+                <span class="status {{ order.status }}">
+                    {{ order.status }}
+                </span>
+            </div>
+            <form method="POST" action="{{url_for('user.cancel_order', order_id=order['id'])}}">
+                {%if order.status == 'completed' %}
+                    <button type="submit">Delete from History</button>
+                {%else%}
+                    <button type="submit">Cancel</button>
+                {%endif%}
+            </form>
+
+            <p><b>Kitchen Location:</b> {{ order.kitchen_location }}</p>
+            <p><b>Delivery:</b> {{ order.delivery_location }}</p>
+            <p><b>Total:</b> ${{ order.total_price }}</p>
+
+            <div class="order-items">
+                <h4>Items</h4>
+
+                {% for item in order['items'] %}
+                    <div class="item-row">
+                        {{ item.item_name }} × {{ item.quantity }}
+                        <span>${{ item.item_price }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

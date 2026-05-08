@@ -80,32 +80,18 @@ create table item(
     price decimal(5,2) not null,
     foreign key (menu_id) references menu(id) on delete cascade
 );
---create table item_availability(
-    --availability text not null check(availability in ('Breakfast', 'Lunch', 'Dinner')),
-    --item_id integer not null,
-    --primary key (availability, item_id),
-    --foreign key (item_id) references item(id)
---);
---create table menu_item(
-    --menu_id integer,
-    --item_id integer,
-    --primary key (menu_id, item_id),
-    --foreign key (menu_id) references menu(id) on delete cascade,
-    --foreign key (item_id) references item(id) on delete cascade
---);
 
 create table orders(
     id integer primary key autoincrement,
+    driver_id integer default null,
     user_id integer not null,
     kitchen_id integer not null,
     status text not null check(
         status in (
             'pending',
-            'preparing',
             'ready',
             'delivering',
-            'completed',
-            'cancelled'
+            'completed'
         )
     ),
     total_price decimal(6,2) not null,

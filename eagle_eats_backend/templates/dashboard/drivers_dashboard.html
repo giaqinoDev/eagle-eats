@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Driver Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='driver_dashboard.css') }}">
+</head>
+
+<body>
+
+<div class="header">
+    <h2>Driver Dashboard</h2>
+    <form action="{{ url_for('auth.logout') }}" method="post">
+        <button type="submit">Logout</button>
+    </form>
+    <p>Available Orders</p>
+</div>
+
+<div class="orders-container">
+
+    {% if orders|length == 0 %}
+        <p>No orders ready for pickup</p>
+    {% endif %}
+
+    {% for order in orders %}
+
+    <div class="order-card">
+
+        <h3>Order #{{ order.id }}</h3>
+
+        <p><b>Kitchen:</b> {{ order.kitchen_name }}</p>
+        <p><b>Delivery:</b> {{ order.delivery_location }}</p>
+        <p><b>Total:</b> ${{ order.total_price }}</p>
+
+        <form method="POST"
+              action="{{ url_for('driver.claim_order', order_id=order.id) }}">
+            <button class="claim-btn">Claim Order</button>
+        </form>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+<h3>Your Active Deliveries</h3>
+
+{% if active_orders|length == 0 %}
+    <p>No active deliveries</p>
+{% endif %}
+
+{% for order in active_orders %}
+<div class="order-card">
+
+    <p><b>Order #{{ order.id }}</b></p>
+    <p>Deliver to: {{ order.delivery_location }}</p>
+
+    <form method="POST"
+          action="{{ url_for('driver.complete_order', order_id=order.id) }}">
+        <button class="complete-btn">Mark Completed</button>
+    </form>
+
+</div>
+{% endfor %}
+
+</body>
+</html>

@@ -132,7 +132,6 @@ def checkout():
     cart = session.get('cart', {})
     delivery_location = session.get('delivery_location')
 
-    # validation
     if not cart:
         return "Cart is empty"
 
@@ -154,53 +153,76 @@ def checkout():
 
         total_price += quantity * price
 
-    # create ONE order
     order_cursor = db.execute(
         '''insert into orders
-        (
-            user_id,
-            kitchen_id,
-            status,
-            total_price,
-            delivery_location
-        )
-        values (?, ?, ?, ?, ?)''',
-        (
-            user_id,
-            kitchen_id,
-            'pending',
-            total_price,
-            delivery_location
-        )
+        (user_id, kitchen_id,status, total_price, delivery_location) values (?, ?, ?, ?, ?)''',
+        (user_id, kitchen_id, 'pending', total_price, delivery_location)
     )
 
     order_id = order_cursor.lastrowid
 
-    # create order items
     for cart_item in cart.values():
 
         db.execute(
-            '''insert into order_item
-            (
-                order_id,
-                item_id,
-                quantity,
-                item_name,
-                item_price
-            )
+            '''insert into order_item(order_id,item_id,quantity,item_name,item_price)
             values(?, ?, ?, ?, ?)''',
-            (
-                order_id,
-                cart_item['item_id'],
-                cart_item['quantity'],
-                cart_item['name'],
-                cart_item['price']
-            )
+            (order_id, cart_item['item_id'], cart_item['quantity'], cart_item['name'], cart_item['price'])
         )
 
     db.commit()
 
-    # clear cart after successful checkout
     session['cart'] = {}
 
     return redirect(url_for('user.dashboard'))
+
+
+@blue_print.route('/orders', methods=('GET',))
+@login_required
+def orders():
+
+    db = get_db()
+    user_id = session['account_id']
+
+    # get all orders for user
+    orders = db.execute(
+        '''select id,kitchen_id,status,total_price,delivery_location from orders
+        where user_id = ?order by id desc''',
+        (user_id,)
+    ).fetchall()
+
+    # attach items to each order
+    orders_items = []
+
+    for order in orders:
+
+        items = db.execute(
+            'select item_name, item_price, quantity from order_item where order_id = ?',
+            (order['id'],)
+        ).fetchall()
+
+        kitchen_location = db.execute(
+            "select location from kitchen where id=?",
+            (order['kitchen_id'],)
+        ).fetchone()
+        orders_items.append({
+            "id": order['id'],
+            "kitchen_id": order['kitchen_id'],
+            "kitchen_location": kitchen_location['location'],
+            "status": order['status'],
+            "total_price": order['total_price'],
+            "delivery_location": order['delivery_location'],
+            "items": items
+        })
+
+    return render_template('dashboard/orders.html', orders=orders_items)
+
+@blue_print.route('/cancel-order/<int:order_id>', methods=('POST',))
+def cancel_order(order_id):
+    data_base = get_db()
+    data_base.execute(
+        'delete from orders where id=?',
+        (order_id,)
+    )
+    data_base.commit()
+
+    return redirect(url_for('user.orders'))
