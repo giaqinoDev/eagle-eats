@@ -1,4 +1,4 @@
-#Eagle Eats
+# Eagle Eats
 **Final Project for CSCI2270.01**
 
 **Premise:** Eagles Eats offers an on demand food delivery service to students on Boston College's upper campus. Students can register with their student ID and place orders directly with open kitchens through the website and select from a collection of academic buildings as drop off locations.
