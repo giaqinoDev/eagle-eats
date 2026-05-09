@@ -2,7 +2,7 @@
 **Final Project for CSCI2270.01**
 
 **Stack**
-- Jinja
+- Jinja2
 - Flask
 - HTML/CSS
 
@@ -96,4 +96,4 @@ Future improvements include:
 - Additional styling through (CSS): The styling implemented in my project leaned more towards fleshing out the logistic management features, and future additions would expand on the delivery system whose minimum styling was meant more to communicate the MVP.  
 - Menu creation: Currently adim cannot create menus, an interface for this would be necessary.  
 - Managing Deliveries/Orders: More features would need to be implemented to manage orders and deliveries on the kitchen and driver layers.
-- Real Input Validation: Currnetly there are no systems in place to validate student IDs or driver licenses so no validation is applied to the registration layer
+- Real Input Validation: Currently there are no systems in place to validate student IDs or driver licenses so no validation is applied to the registration layer
