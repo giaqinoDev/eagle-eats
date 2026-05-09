@@ -1,25 +1,19 @@
 body {
     margin: 0;
 }
-
-/* MAIN LAYOUT */
 .layout {
     display: flex;
     gap: 20px;
     padding: 20px;
 }
-
-/* LEFT SIDE */
 .main {
     flex: 3;
 }
 
-/* HEADER */
+
 .header {
     margin-bottom: 20px;
 }
-
-/* KITCHEN CARD */
 .kitchen-card {
     background: white;
     padding: 15px;
