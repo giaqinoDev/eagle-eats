@@ -3,6 +3,7 @@
 
 **Stack**
 - Jinja2
+- SQLite
 - Flask
 - HTML/CSS
 
